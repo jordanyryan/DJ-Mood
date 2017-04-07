@@ -1,7 +1,38 @@
 $(document).ready(function() {
+  
   navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
   var localMediaStream = null;
   var video = document.getElementById('mirror');
+  
+  function captureVideo() {
+    if (localMediaStream) {
+      var recorder = RecordRTC(localMediaStream, {type: video, recorderType: RecordRTC.WhammyRecorder})
+      recorder.startRecording()
+      setTimeout(function() {
+        recorder.stopRecording(function() {
+          recorder.getDataURL(function(dataURL) {
+            var video = {
+              blob: recorder.getBlob(),
+              dataURL: dataURL
+            };
+            var fileName = new Date().toString() + '.' + video.blob.type.split('/')[1]
+            var postFile = {
+              name: fileName,
+              type: video.blob.type,
+              contents: video.dataURL
+            };
+            debugger;
+            $.ajax({
+              url: '/videos',
+              type: 'POST',
+              data: JSON.stringify(postFile)
+            });
+          });
+        });
+      }, 10000);
+    }
+  };
+
   // webcam setup
   if (navigator.getUserMedia) {
     navigator.getUserMedia({video: true}, function(stream) {
@@ -13,23 +44,7 @@ $(document).ready(function() {
     });
   };
 
-  function captureVideo() {
-
-    if (localMediaStream) {
-      var recorder = RecordRTC(localMediaStream, {type: video, recorderType: RecordRTC.WhammyRecorder})
-      recorder.startRecording()
-      setTimeout(function() {
-        recorder.stopRecording(function() {
-          console.log('GOT A VIDEO');
-        })
-      }, 10000);
-      // send that ^ data to API via AJAX
-      // catch response in .done and pass to express
-      // clear canvas
-    }
-  };
-
   $('#snap').click(function() {
-    var video = captureVideo();
+    captureVideo();
   });
 });
