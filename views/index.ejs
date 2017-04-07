@@ -1,7 +1,6 @@
 <html>
 <head>
   <title>DJ MOOD</title>
-  <script type="text/javascript" src="https://cdn.webrtc-experiment.com/RecordRTC.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript" src="webcam.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Monoton" rel="stylesheet">
@@ -12,6 +11,7 @@
   <div id='content'>
     <div id='webcam'>
       <video id='mirror' autoplay='true'></video>
+      <canvas id='video'></canvas>
     </div>
     <button id='snap'>Generate Playlist</button>
     <div id='player'>

@@ -2,8 +2,6 @@ $(document).ready(function() {
   navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
   var localMediaStream = null;
   var video = document.getElementById('mirror');
-  var canvas = document.getElementById('video');
-  var ctx = canvas.getContext('2d');
   // webcam setup
   if (navigator.getUserMedia) {
     navigator.getUserMedia({video: true}, function(stream) {
@@ -16,8 +14,15 @@ $(document).ready(function() {
   };
 
   function captureVideo() {
+
     if (localMediaStream) {
-      ctx.drawImage(video, 0, 0);
+      var recorder = RecordRTC(localMediaStream, {type: video, recorderType: RecordRTC.WhammyRecorder})
+      recorder.startRecording()
+      setTimeout(function() {
+        recorder.stopRecording(function() {
+          console.log('GOT A VIDEO');
+        })
+      }, 10000);
       // send that ^ data to API via AJAX
       // catch response in .done and pass to express
       // clear canvas
@@ -25,6 +30,6 @@ $(document).ready(function() {
   };
 
   $('#snap').click(function() {
-    captureVideo();
+    var video = captureVideo();
   });
 });
