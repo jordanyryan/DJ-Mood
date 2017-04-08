@@ -4,6 +4,7 @@ $(document).ready(function() {
   var localMediaStream = null;
   var video = document.getElementById('mirror');
   
+  // record video & post to server
   function captureVideo() {
     if (localMediaStream) {
       var recorder = RecordRTC(localMediaStream, {type: video, recorderType: RecordRTC.WhammyRecorder})
@@ -15,22 +16,25 @@ $(document).ready(function() {
               blob: recorder.getBlob(),
               dataURL: dataURL
             };
-            var fileName = new Date().toString() + '.' + video.blob.type.split('/')[1]
+            var fileName = function() {
+              return (Math.floor(Math.random()*(99999-10000))+10000).toString() + '.' + video.blob.type.split('/')[1]
+            };
             var postFile = {
               name: fileName,
               type: video.blob.type,
               contents: video.dataURL
             };
-            debugger;
             $.ajax({
               url: '/videos',
               type: 'POST',
               data: JSON.stringify(postFile)
+            }).done(function(response) {
+              // update the player with new uri
             });
           });
         });
       }, 10000);
-    }
+    };
   };
 
   // webcam setup

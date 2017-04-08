@@ -6,8 +6,6 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.post('/videos', function(req, res, next) {
-	console.log(req.body);
-});
+
 
 module.exports = router;
