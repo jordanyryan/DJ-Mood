@@ -64,10 +64,10 @@ passport.use(new SpotifyStrategy(spotOpts, spotCallBack))
 
 
 app.route('/login')
-  .get(passport.authenticate('spotify', {scope: ['user-read-email', 'user-read-private']})) 
+  .get(passport.authenticate('spotify', {scope: ['user-read-email', 'user-read-private']}))
 
 
-  
+
 
 app.route('/auth/spotify/callback')
   .get(passport.authenticate('spotify',  function(err, user, info){
