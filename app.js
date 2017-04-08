@@ -1,6 +1,5 @@
 var express = require('express');
 var path = require('path');
-var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -53,16 +52,5 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-passport.use(new SpotifyStrategy({
-    clientID: client_id,
-    clientSecret: client_secret,
-    callbackURL: "http://localhost:8888/auth/spotify/callback"
-  },
-  function(accessToken, refreshToken, profile, done) {
-    User.findOrCreate({ spotifyId: profile.id }, function (err, user) {
-      return done(err, user);
-    });
-  }
-));
 
 module.exports = app;
