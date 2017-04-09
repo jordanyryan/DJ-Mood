@@ -1,4 +1,5 @@
 var express = require('express');
+var request = require('request');
 var router = express.Router();
 var fs = require('fs');
 
@@ -7,10 +8,26 @@ router.post('/', function(req, res, next) {
 		var dataURL = i;
 	}
 	var videoBuffer = readBase64Video(dataURL);
-	var fileName = 'test.webm';
-	fs.writeFile('tmp/' + fileName, videoBuffer.data, function() {
-		res.redirect('/videos/api');
-	});
+	request.post({
+		'https://api.kairos.com/v2/media', 
+		headers: {
+			'app_id': '6d32c141',
+			'api_key': '6db3ff0a241edbbe3d2b4f2943fb330e',
+		},
+		formData: {
+			source: dataURL,
+			timeout: 60
+		}
+	}).on('response', function(response) {
+		console.log(response.headers);
+		console.log(response.statusCode);
+		console.log(response.statusMessage);
+		console.log(response.url);
+	})
+	// var fileName = 'test.webm';
+	// fs.writeFile('tmp/' + fileName, videoBuffer.data, function() {
+	// 	res.redirect('/videos/api');
+	// });
 	// write data to temp file - DONE
 	// send temp file to api - below in /api
 	// run thru algorithm to trigger/compile playlists - on /api response
