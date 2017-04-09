@@ -11,7 +11,6 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
     "ejs": "^2.5.6",
-
     "filereader": "^0.10.3",
     "express": "^4.15.2",
     "express-handlebars": "*",
@@ -21,8 +20,8 @@
     "jade": "^1.11.0",
     "mongodb": "^2.2.25",
     "mongoose": "^4.9.3",
-
     "morgan": "~1.8.1",
+    "request": "^2.81.0",
     "nodemon": "^1.11.0",
     "passport": "^0.3.2",
     "passport-http": "*",
