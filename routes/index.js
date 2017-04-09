@@ -6,10 +6,13 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Welcome to DJ Mood'});
 });
 
-router.get('/user/me', function(req, res, next) {
-  res.render('show', {
-
-  })
+router.get('/show', function(req, res, next) {
+  res.render('show')
 })
 
+
 module.exports = router;
+
+
+
+
