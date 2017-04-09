@@ -1,22 +1,23 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>DJ MOOD</title>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script type="text/javascript" src="webcam.js"></script>
-  <link href="https://fonts.googleapis.com/css?family=Monoton" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="styles.css">
+    <% include ./partials/head %>
 </head>
-<body>
-  <h1 id='title'>DJ MOOD</h1>
-  <div id='content'>
-    <div id='webcam'>
-      <video id='mirror' autoplay='true'></video>
-      <canvas id='video'></canvas>
-    </div>
-    <button id='snap'>Generate Playlist</button>
-    <div id='player'>
-      <h2>Spotify Player Goes Here</h2>
-    </div>
-  </div>
+<body class="container">
+
+    <header>
+        <% include ./partials/header %>
+    </header>
+
+    <main>
+        <div class="jumbotron">
+          <h3>Welcome to DJ Mood</h3>
+            <p>How's Your Mood?</p>
+        </div>
+    </main>
+
+    <footer>
+        <% include ./partials/footer %>
+    </footer>
 </body>
 </html>
