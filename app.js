@@ -7,22 +7,23 @@ var ejs = require('ejs');
 var session = require('express-session');
 var passport = require('passport');
 var SpotifyStrategy = require('passport-spotify').Strategy
+var mongoose = require('mongoose')
 
 
 var index = require('./routes/index');
+var show = require('./routes/show')
 // var users = require('./routes/users');
 
 var app = express();
 
-const MongoClient = require('mongodb').MongoClient;
 
-MongoClient.connect('mongodb://admin:admin@ds155150.mlab.com:55150/dj-mood', (err, database) => {
-  if (err) return console.log(err)
-  db = database
-  app.listen(3000,() => {
-    console.log('listening on port 3000')
-  })
-})
+
+     
+ 
+var mongodbUri = 'mongodb://admin:admin@ds155150.mlab.com:55150/dj-mood';
+ 
+mongoose.connect(mongodbUri);
+var conn = mongoose.connection;       
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -36,6 +37,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
+app.use('/show', index)
 // app.use('/users', users);
 
 app.use(session({
@@ -56,7 +58,7 @@ var spotOpts = {
 
 
 var spotCallBack = function(accessToken, refreshToken, profile, cb) {
-  console.log(accessToken, refreshToken, profile, cb)
+  console.log(profile)
 }
 
 
@@ -94,5 +96,12 @@ app.route('/auth/spotify/callback')
 //   res.render('error');
 // });
 
+conn.on('error', console.error.bind(console, 'connection error:'));  
+
+conn.once('open', function(err) {                                                                                                                                         
+  if(err) throw err;
+  // Wait for the database connection to establish, then start the app.
+  app.listen(3000);                                                          
+});
 
 module.exports = app;
