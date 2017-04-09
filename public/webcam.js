@@ -12,22 +12,10 @@ $(document).ready(function() {
       setTimeout(function() {
         recorder.stopRecording(function() {
           recorder.getDataURL(function(dataURL) {
-            var video = {
-              blob: recorder.getBlob(),
-              dataURL: dataURL
-            };
-            var fileName = function() {
-              return (Math.floor(Math.random()*(99999-10000))+10000).toString() + '.' + video.blob.type.split('/')[1]
-            };
-            var postFile = {
-              name: fileName,
-              type: video.blob.type,
-              contents: video.dataURL
-            };
             $.ajax({
               url: '/videos',
               type: 'POST',
-              data: JSON.stringify(postFile)
+              data: dataURL
             }).done(function(response) {
               // update the player with new uri
             });
