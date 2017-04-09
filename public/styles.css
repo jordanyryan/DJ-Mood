@@ -1,0 +1,42 @@
+body {
+  background-image: url('singing-plants.jpg');
+  background-size: cover;
+}
+body * {
+  margin: 0 auto;
+  text-align: center;
+}
+
+#title {
+  margin-top: 50px;
+  margin-bottom: 20px;
+  font-family: 'Monoton', cursive;
+  font-size: 3em;
+  max-width: 500px;
+  text-shadow: 1px 2px white;
+}
+
+#content {
+  max-width: 500px;
+}
+
+#webcam {
+  height: 400px;
+  width: 400px;
+  border-radius: 10px;
+}
+
+#mirror {
+  height: 400px;
+  width: 400px;
+  border-radius: 10px;
+}
+
+#video {
+  display: none;
+}
+
+#snap {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}

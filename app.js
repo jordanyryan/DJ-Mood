@@ -11,8 +11,13 @@ var mongoose = require('mongoose')
 
 
 var index = require('./routes/index');
+
+var users = require('./routes/users');
+var videos = require('./routes/videos');
+
 var show = require('./routes/show')
 // var users = require('./routes/users');
+
 
 var app = express();
 
@@ -32,11 +37,14 @@ app.set('view engine', 'ejs');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ limit: '7mb', extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use('/', index);
+
+app.use('/users', users);
+app.use('/videos', videos);
+
 app.use('/show', index)
 // app.use('/users', users);
 
@@ -78,6 +86,7 @@ app.route('/auth/spotify/callback')
 
 
 
+
 // catch 404 and forward to error handler
 // app.use(function(req, res, next) {
 //   var err = new Error('Not Found');
@@ -90,6 +99,24 @@ app.route('/auth/spotify/callback')
 //   // set locals, only providing error in development
 //   res.locals.message = err.message;
 //   res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+
+  // render the error page
+  res.status(err.status || 500);
+  console.log(err);
+});
+
+// passport.use(new SpotifyStrategy({
+//     clientID: client_id,
+//     clientSecret: client_secret,
+//     callbackURL: "http://localhost:8888/auth/spotify/callback"
+//   },
+//   function(accessToken, refreshToken, profile, done) {
+//     User.findOrCreate({ spotifyId: profile.id }, function (err, user) {
+//       return done(err, user);
+//     });
+//   }
+// ));
 
 //   // render the error page
 //   res.status(err.status || 500);
