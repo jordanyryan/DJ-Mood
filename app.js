@@ -100,12 +100,6 @@ app.route('/auth/spotify/callback')
 //   res.locals.message = err.message;
 //   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-
-  // render the error page
-  res.status(err.status || 500);
-  console.log(err);
-});
-
 // passport.use(new SpotifyStrategy({
 //     clientID: client_id,
 //     clientSecret: client_secret,
