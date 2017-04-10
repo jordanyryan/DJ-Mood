@@ -54,9 +54,12 @@ router.post('/videos', function(req, res, next) {
           app_key: '6db3ff0a241edbbe3d2b4f2943fb330e'
         }
       }, function(err, res) {
-        console.log(res.body);
+        console.log(res.body); // here we parse the emotions JSON and return one word emotional state
+        // pass this word to preferences, get back another word of what kind of music to play
+        // pass THAT word to playlist maker to compose playlist
+        // pass playlist URI to front end and update the player.
       });
-    }, 30000);
+    }, 25000);
   });
 });
 
