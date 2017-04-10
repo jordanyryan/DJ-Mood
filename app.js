@@ -85,7 +85,7 @@ app.route('/auth/spotify/callback')
 
 
 app.get('/download', function(req,res) {
-  res.download('tmp/test.jpg');
+  res.download('tmp/test2.jpg');
 })
 
 
