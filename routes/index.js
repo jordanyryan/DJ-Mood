@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var fs = require('fs');
-var $ = require('jquery')
+var $ = require('jquery');
+var request = require('request');
 
 /* GET home page */
 router.get('/', function(req, res) {
@@ -38,7 +39,7 @@ router.get('/login', function(req, res) {
 router.post('/videos', function(req, res, next) {
   console.log(req.body);
   request.post({
-    url: 'https://api.kairos.com/v2/media?source=' + req.body.flv,
+    url: ('https://api.kairos.com/v2/media?source=' + req.body.flv),
     headers: {
       app_id: '6d32c141',
       app_key: '6db3ff0a241edbbe3d2b4f2943fb330e'
