@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  .main.container
+    .row
+      .col-md-8.col-md-offset-2
+        h1.display-4.m-b-2 Generate a playlist based on your mood
+
+      #webcam(class='col-md-6')
+        video#mirror(autoplay='true')
+      button#snap(class='col-md-offset-2 btn-info') Generate Playlist 
+      br
+      #player
+        iframe(src='https://embed.spotify.com/?uri=spotify%3Aalbum%3A4ycNE7y1rp5215g1kkqk1P', width='300', height='300', frameborder='0', allowtransparency='true')
+
+
