@@ -118,7 +118,12 @@ a:hover {
 }
 
 /* Icon Styles */
-
+.float-left {
+  float: left;
+  margin-right: 10px;
+  background-color: white;
+  border-radius: 50%;
+}
 .icn-logo {
   margin: 3px 3px 0;
   float: left;
