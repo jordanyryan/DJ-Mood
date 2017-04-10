@@ -16,7 +16,7 @@ router.post('/', function(req, res, next) {
 	wStream.end();
 	// send test.webm to api
 	request.post({
-		url: ('https://api.kairos.com/v2/media?source=https://immense-wildwood-62744.herokuapp.com/download'),
+		url: ('https://api.kairos.com/v2/media?source=https://immense-wildwood-62744.herokuapp.com/static/test2.jpg'),
 		headers: {
 			'app_id': '6d32c141',
 			'app_key': '6db3ff0a241edbbe3d2b4f2943fb330e'

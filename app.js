@@ -41,7 +41,7 @@ app.use(bodyParser.urlencoded({ limit: '7mb', extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
-
+app.use('/static', express.static('tmp'));
 app.use('/users', users);
 app.use('/videos', videos);
 
