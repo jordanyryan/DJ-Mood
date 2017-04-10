@@ -70,7 +70,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // mongodb connection
-mongoose.connect('process.env.DB_URI');
+mongoose.connect(process.env.DB_URI);
 var db = mongoose.connection;
 
 //Session config for passport
