@@ -1,8 +1,84 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+
+
+
+.btn-info-outline {
+  transform: scale(1.3);
+  margin-top: 2rem;
+  color: white;
+  border-color: #84bd00;
 }
 
-a {
-  color: #00B7FF;
+.btn-info{
+  background-color: #84bd00;
+  border-color: #84bd00;
+}
+
+.btn-info:hover, .btn-info:active, .btn-info:focus {
+  color: white;
+  transform: scale(1.05);
+  background-color: #84bd00;
+  border-color: #84bd00
+}
+
+.btn-info-outline:hover, .btn-info-outline:active, .btn-info-outline:focus{
+  color: #84bd00;
+  background-color: transparent;
+  border-color: #84bd00
+}
+
+.landing {
+  font-family: "Lato";
+  text-shadow: 2px 2px #454545	
+}
+
+.navbar-brand{
+  font-family: "Lato" 
+}
+
+.main{
+  padding-top: 10em;
+
+
+}
+
+.left-side{
+  float: left;
+}
+
+#nav-home:hover, #nav-home:active, #nav-home:focus{
+  color: #84bd00;
+  transition: .4s;
+}
+.about-head{
+  font-family: "Lato";
+  font-weight: bold;
+  text-shadow: 1px 1px #454545
+}
+
+.about-paragraph{
+  font-family: "Lato";
+  text-shadow: 1px 1px #454545;
+  font-size: 20px;
+}
+
+.name{
+  font-family: "Lato";
+  font-weight: bold;
+  text-shadow: 1px 1px #454545	
+}
+
+.nav-link:hover, .nav-link:active, .nav-link:focus{
+  color: #84bd00;
+  transition: .4s;
+}
+
+.profile{
+  font-family: "Lato";
+  text-shadow: 1px 1px #454545;
+  font-size: 2.5rem;	
+}
+
+.generate{
+  font-family: "Lato";
+  text-shadow: 2px 2px #454545	
 }
