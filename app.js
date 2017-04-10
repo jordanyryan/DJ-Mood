@@ -75,7 +75,7 @@ var db = mongoose.connection;
 
 //Session config for passport
 var sessionOptions = {
-  secret: "this is super secret",
+  secret: process.env.DB_SECRET ,
   resave: true,
   saveUninitialized: true,
   store: new MongoStore({
