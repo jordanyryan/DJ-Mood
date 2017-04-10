@@ -1,3 +1,6 @@
+// load environment variables
+require('dotenv').config();
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -23,21 +26,21 @@ passport.use(new SpotifyStrategy({
 }, function(accessToken, refreshToken, profile, done){
   console.log(profile);
   console.log("dsfsdfsad")
-  
+
   if (profile.emails) {
   User.findOneAndUpdate({
-    email: profile.emails[0].value 
+    email: profile.emails[0].value
   }, {
     name: profile.displayName || profile.username,
-    email: profile.emails[0].value 
+    email: profile.emails[0].value
   }, {
     upsert: true
-  }, 
+  },
   done);
   } else {
     var noEmailError = new Error("Your email privacy settings prevent you from signing into DJ Mood")
     done(noEmailError, null);
-  } 
+  }
 }));
 
 // translate data structure for session storage, func with 2 args
@@ -67,7 +70,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // mongodb connection
-mongoose.connect('mongodb://admin:admin@ds155150.mlab.com:55150/dj-mood');
+mongoose.connect('process.env.DB_URI');
 var db = mongoose.connection;
 
 //Session config for passport
