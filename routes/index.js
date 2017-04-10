@@ -37,7 +37,6 @@ router.get('/login', function(req, res) {
 
 
 router.post('/videos', function(req, res, next) {
-  console.log(req.body);
   request.post({
     url: ('https://api.kairos.com/v2/media?source=' + req.body.flv),
     headers: {
@@ -45,26 +44,20 @@ router.post('/videos', function(req, res, next) {
       app_key: '6db3ff0a241edbbe3d2b4f2943fb330e'
     }
   }, function(err, res) {
-    console.log(res.body);
-  })
-  // write data to temp file - DONE
-  // send temp file to api - below in /api
-  // run thru algorithm to trigger/compile playlists - on /api response
-  // get back uri of spotify playlist & return that to hit AJAX .done callback in webcam.js
+    var idJSON = JSON.parse(res.body);
+    console.log('Giving Kairos some time to analyze the results...');
+    setTimeout(function() {
+      request.get({
+        url: ('https://api.kairos.com/v2/analytics/' + idJSON.id),
+        headers: {
+          app_id: '6d32c141',
+          app_key: '6db3ff0a241edbbe3d2b4f2943fb330e'
+        }
+      }, function(err, res) {
+        console.log(res.body);
+      });
+    }, 30000);
+  });
 });
-
-router.get('/videos/api', function(req, res, next) {
-  console.log('redirected to someplace to build request and save the file')
-  // build out request
-  // on DONE redirect response to run thru kairos matching algorithm
-});
-
-function readBase64Video(data) {
-  var matches = data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-  var response = {};
-  response.type = matches[1];
-  response.data = new Buffer(matches[2], 'base64');
-  return response;
-};
 
 module.exports = router;
