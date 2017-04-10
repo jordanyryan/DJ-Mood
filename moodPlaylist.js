@@ -1,13 +1,7 @@
 "use strict";
-const express = require('express');
-const router = express.Router();
+
 const request = require('request-promise');
 const userAgent = "DJ-Mood-Student-Project-DEVBOOTCAMP-(https://github.com/jordanyryan/DJ-Mood)-tomchang93@gmail.com";
-/* GET home page. */
-function joiner(str1, str2){
-  let res = str1 + '+' + str2;
-  return res;
-};
 
 function getRandomSubarray(arr, size) {
   var shuffled = arr.slice(0), i = arr.length, min = i - size, temp, index;
@@ -19,9 +13,10 @@ function getRandomSubarray(arr, size) {
   }
   return shuffled.slice(min);
 }
+
 function getTracks(callback){
   request({
-    url: "http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=depressed&api_key=73d2e1e7b7187ac1edc67ee9c7d28b11&format=json&limit=200",
+    url: "http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=sad&api_key=73d2e1e7b7187ac1edc67ee9c7d28b11&format=json&limit=200",
     headers: {
       'User-Agent': userAgent
     },
@@ -114,7 +109,6 @@ function addTracks(tracks, playlist, callback){
   })
 }
 
-
 function runner(){
   getTracks(function( tracks ){
     console.log("got track")
@@ -129,13 +123,12 @@ function runner(){
     });
   })
 }
-router.get('/', function(req, res, next) {
-  runner()
-  res.render('index');
-});
 
-
-router.post('/', function(req, res){
-})
-
-module.exports = router;
+module.exports = {
+  getRandomSubarray: getRandomSubarray,
+  getTracks: getTracks,
+  getIds: getIds,
+  createPlaylist: createPlaylist,
+  addTracks: addTracks,
+  runner: runner
+};
