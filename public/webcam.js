@@ -2,8 +2,8 @@ $(document).ready(function() {
   Recorder.configure({
     size: 'small', // set the default size to small
     bandwidth: 180, // set the max upload bandwidth to 180 kbps
-    fps: 15, // set the video capture to 15 frames per second
-    duration: 10
+    fps: 10, // set the video capture to 15 frames per second
+    duration: 3
     // see configuration section of docs for full list.
   });
 
