@@ -6,7 +6,7 @@ var passport = require('passport')
 //GET /auth/login/spotify
 
 router.get('/login/spotify',
-  passport.authenticate('spotify', {scope:'user-read-email'}));
+  passport.authenticate('spotify', {scope:'user-read-email user-read-private'}));
 
 
 
