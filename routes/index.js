@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var fs = require('fs');
-var $ = require('jquery')
+var $ = require('jquery');
+var request = require('request');
 
 /* GET home page */
 router.get('/', function(req, res) {
@@ -36,32 +37,30 @@ router.get('/login', function(req, res) {
 
 
 router.post('/videos', function(req, res, next) {
-  for (var i in req.body) {
-    var dataURL = i;
-  }
-  var videoBuffer = readBase64Video(dataURL);
-  var fileName = 'test.webm';
-  fs.writeFile('tmp/' + fileName, videoBuffer.data, function() {
-    res.redirect('/videos/api');
+  request.post({
+    url: ('https://api.kairos.com/v2/media?source=' + req.body.flv),
+    headers: {
+      app_id: '6d32c141',
+      app_key: '6db3ff0a241edbbe3d2b4f2943fb330e'
+    }
+  }, function(err, res) {
+    var idJSON = JSON.parse(res.body);
+    console.log('Giving Kairos some time to analyze the results...');
+    setTimeout(function() {
+      request.get({
+        url: ('https://api.kairos.com/v2/analytics/' + idJSON.id),
+        headers: {
+          app_id: '6d32c141',
+          app_key: '6db3ff0a241edbbe3d2b4f2943fb330e'
+        }
+      }, function(err, res) {
+        console.log(res.body); // here we parse the emotions JSON and return one word emotional state
+        // pass this word to preferences, get back another word of what kind of music to play
+        // pass THAT word to playlist maker to compose playlist
+        // pass playlist URI to front end and update the player.
+      });
+    }, 25000);
   });
-  // write data to temp file - DONE
-  // send temp file to api - below in /api
-  // run thru algorithm to trigger/compile playlists - on /api response
-  // get back uri of spotify playlist & return that to hit AJAX .done callback in webcam.js
 });
-
-router.get('/videos/api', function(req, res, next) {
-  console.log('redirected to someplace to build request and save the file')
-  // build out request
-  // on DONE redirect response to run thru kairos matching algorithm
-});
-
-function readBase64Video(data) {
-  var matches = data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-  var response = {};
-  response.type = matches[1];
-  response.data = new Buffer(matches[2], 'base64');
-  return response;
-};
 
 module.exports = router;
