@@ -8,9 +8,20 @@ function joiner(str1, str2){
   let res = str1 + '+' + str2;
   return res;
 };
+
+function getRandomSubarray(arr, size) {
+  var shuffled = arr.slice(0), i = arr.length, min = i - size, temp, index;
+  while (i-- > min) {
+    index = Math.floor((i + 1) * Math.random());
+    temp = shuffled[index];
+    shuffled[index] = shuffled[i];
+    shuffled[i] = temp;
+  }
+  return shuffled.slice(min);
+}
 function getTracks(callback){
   request({
-    url: "http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=sad&api_key=73d2e1e7b7187ac1edc67ee9c7d28b11&format=json&limit=5",
+    url: "http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=sad&api_key=73d2e1e7b7187ac1edc67ee9c7d28b11&format=json&limit=200",
     headers: {
       'User-Agent': userAgent
     },
@@ -20,7 +31,8 @@ function getTracks(callback){
     console.log("running");
     let tracks = json["tracks"]["track"];
     console.log("Grabbed the tracks");
-    callback(tracks);
+    let randomTracks = getRandomSubarray(tracks, 20);
+    callback(randomTracks);
   })
   .catch(function(error){
     console.log(error)
@@ -92,7 +104,6 @@ function createPlaylist(trackUri, callback){
 
 function addTracks(tracks, playlist, callback){
   let songsUrl = tracks.join(',');
-  console.log(songsUrl)
   request({
     method: 'POST',
     url: ("https://api.spotify.com/v1/users/mrchangman/playlists/" + playlist + '/tracks?position=0&uris=' + songsUrl),
