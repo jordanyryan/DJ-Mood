@@ -28,8 +28,9 @@ passport.use(new SpotifyStrategy({
   User.findOneAndUpdate({
     email: profile.emails[0].value 
   }, {
-    name: profile.displayName || profile.username,
-    email: profile.emails[0].value 
+    name: profile.displayName,
+    email: profile.emails[0].value ,
+    username: profile.id
   }, {
     upsert: true
   }, 

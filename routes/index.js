@@ -1,8 +1,10 @@
+
 var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 var $ = require('jquery');
 var request = require('request');
+
 
 /* GET home page */
 router.get('/', function(req, res) {
