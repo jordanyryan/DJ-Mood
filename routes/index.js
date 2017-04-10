@@ -36,14 +36,16 @@ router.get('/login', function(req, res) {
 
 
 router.post('/videos', function(req, res, next) {
-  for (var i in req.body) {
-    var dataURL = i;
-  }
-  var videoBuffer = readBase64Video(dataURL);
-  var fileName = 'test.webm';
-  fs.writeFile('tmp/' + fileName, videoBuffer.data, function() {
-    res.redirect('/videos/api');
-  });
+  console.log(req.body);
+  request.post({
+    url: 'https://api.kairos.com/v2/media?source=' + req.body.flv,
+    headers: {
+      app_id: '6d32c141',
+      app_key: '6db3ff0a241edbbe3d2b4f2943fb330e'
+    }
+  }, function(err, res) {
+    console.log(res.body);
+  })
   // write data to temp file - DONE
   // send temp file to api - below in /api
   // run thru algorithm to trigger/compile playlists - on /api response
