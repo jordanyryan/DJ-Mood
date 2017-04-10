@@ -84,6 +84,9 @@ app.route('/auth/spotify/callback')
   }))
 
 
+app.get('/download', function(req,res) {
+  res.download('tmp/test.webm');
+})
 
 
 
@@ -122,7 +125,7 @@ conn.on('error', console.error.bind(console, 'connection error:'));
 conn.once('open', function(err) {                                                                                                                                         
   if(err) throw err;
   // Wait for the database connection to establish, then start the app.
-  app.listen(3000);                                                          
+  app.listen(5000);                                                          
 });
 
 module.exports = app;
