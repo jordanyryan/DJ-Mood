@@ -13,11 +13,11 @@ let getRandomSubarray = function(arr, size) {
   return shuffled.slice(min);
 }
 
-let getTracks = function(callback){
+let getTracks = function(emotion, callback){
   console.log("yay")
   request({
     // needs to switch the tag out with the mood
-    url: `http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=sad&api_key=${process.env.LASTFMKEY}&format=json&limit=200`,
+    url: `http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=${ emotion }&api_key=${process.env.LASTFMKEY}&format=json&limit=200`,
     headers: {
       'User-Agent': userAgent
     },
@@ -112,8 +112,8 @@ let addTracks = function(tracks, playlist, callback){
   })
 }
 
-let runner = function(){
-  getTracks(function( tracks ){
+let runner = function( emotion ){
+  getTracks(function( emotion, tracks ){
     console.log("got track")
     getIds(tracks, function(trackUri){
       console.log("got track uri")
