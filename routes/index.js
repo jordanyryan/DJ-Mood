@@ -1,7 +1,7 @@
-var express = require('express');
-var router = express.Router();
-var fs = require('fs');
-var $ = require('jquery')
+const express = require('express');
+const router = express.Router();
+const fs = require('fs');
+const $ = require('jquery');
 
 /* GET home page */
 router.get('/', function(req, res) {
