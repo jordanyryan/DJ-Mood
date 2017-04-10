@@ -16,14 +16,10 @@ router.post('/', function(req, res, next) {
 	wStream.end();
 	// send test.webm to api
 	request.post({
-		url: ('http://api.kairos.com/v2/media'),
+		url: ('http://api.kairos.com/v2/media?source=https%3A%2F%2Fimmense-wildwood-62744.herokuapp.com%2Fdownload'),
 		headers: {
 			'app_id': '6d32c141',
 			'app_key': '6db3ff0a241edbbe3d2b4f2943fb330e'
-		},
-		formData: {
-			source: fs.createReadStream('tmp/test.webm'),
-			timeout: 60
 		}
 	}, function(error, response, body) {
 		console.log(response.headers);
