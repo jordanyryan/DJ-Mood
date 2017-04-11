@@ -1,0 +1,64 @@
+extends layout
+
+block content
+
+  .main.container.clearfix
+    .row
+      .col-md-10.col-md-offset-2
+      if(user)
+      h3 We want to know what kind of music you like based on your mood
+
+        legend Select Music Type When:
+        hr
+        form(action='/profile' method='post')
+          fieldset
+          label Happy
+          br
+          select.myList(name="Happy")
+            option(value='Happy' selected) Happy
+            option(value='Sad') Sad
+            option(value='Angry') Angry
+            option(value='Relaxed') Relaxed
+            option(value='Chilled') Chilled
+          fieldset
+          label Sad
+          br
+          select.myList(name="Sad")
+            option(value='Happy') Happy
+            option(value='Sad' selected) Sad
+            option(value='Angry') Angry
+            option(value='Relaxed') Relaxed
+            option(value='Chilled') Chilled
+          fieldset
+          label Angry
+          br
+          select.myList(name="Angry")
+            option(value='Happy') Happy
+            option(value='Sad') Sad
+            option(value='Angry' selected) Angry
+            option(value='Relaxed') Relaxed
+            option(value='Chilled') Chilled
+          fieldset
+          label Relaxed
+          br
+          select.myList(name="Relaxed")
+            option(value='Happy') Happy
+            option(value='Sad') Sad
+            option(value='Angry') Angry
+            option(value='Relaxed' selected) Relaxed
+            option(value='Chilled') Chilled
+
+
+          fieldset
+          label Chill
+          br
+          select.myList(name="Chilled")
+            option(value='Happy') Happy
+            option(value='Sad') Sad
+            option(value='Angry') Angry
+            option(value='Relaxed') Relaxed
+            option(value='Chilled' selected) Chilled
+          br
+          input.submit(type="submit", value="Save")
+
+        a(href='/profile') <<< Back to Profile

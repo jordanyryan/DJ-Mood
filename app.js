@@ -12,6 +12,7 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const User = require("./models/user");
 const $ = require('jquery');
+const = expressValidator = require('express-validator')
 
 passport.use(new SpotifyStrategy({
   clientID: process.env.SPOTIFY_CLIENT_ID,
@@ -26,7 +27,8 @@ passport.use(new SpotifyStrategy({
     name: profile.displayName,
     email: profile.emails[0].value ,
     username: profile.id,
-    accessToken: accessToken
+    accessToken: accessToken, 
+    preferences: []
   }, {
     upsert: true
   }, 
@@ -48,27 +50,31 @@ passport.deserializeUser(function(userId, done){
 var routes = require('./routes/index');
 var auth = require('./routes/auth')
 
+
 var app = express();
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+
+// rendering the preferences for users based on Mood
+app.get('/preferences', (req, res) => {
+    res.render('preferences');
+
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({limit: '7mb',  extended: false }));
+app.use(bodyParser.urlencoded({limit: '7mb', extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-mongoose.connect('mongodb://admin:admin@ds155150.mlab.com:55150/dj-mood');
+
+mongoose.connect(process.env.DB_URI);
 var db = mongoose.connection;
 
 var sessionOptions = {
-  secret: "this is super secret",
-  resave: true,
-  saveUninitialized: true,
-  store: new MongoStore({
-    mongooseConnection: db
-  })
+    secret: process.env.DB_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    store: new MongoStore({mongooseConnection: db})
 };
 
 app.use(session(sessionOptions))
@@ -84,27 +90,27 @@ app.use('/', routes);
 app.use('/auth', auth);
 
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
+    app.use(function(err, req, res, next) {
+        res.status(err.status || 500);
+        res.render('error', {
+            message: err.message,
+            error: err
+        });
     });
-  });
 }
 
 app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
+    res.status(err.status || 500);
+    res.render('error', {
+        message: err.message,
+        error: {}
+    });
 });
 
 module.exports = app;

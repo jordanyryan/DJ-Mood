@@ -12,6 +12,12 @@ var UserSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+
+  preferences: {
+    type: Array,
+    required: true,
+    trim: true
+},
   username: {
     type: String,
     required: true,
@@ -21,7 +27,9 @@ var UserSchema = new mongoose.Schema({
   accessToken: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
+    unique: true
+
   }
 });
 
