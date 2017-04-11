@@ -155,14 +155,12 @@ function analyzeKairosOutput(emotionalJSON) {
   for (var i = 0; i < baseStates.length; i++) {
     var baseState = kairosBaseCases[baseStates[i]];
     var squaredDiffs = []
-    for (var j = 0; j < 6; j++) {
-      squaredDiffs.push((emotionalJSON.joy - baseState.joy) * (emotionalJSON.joy - baseState.joy));
-      squaredDiffs.push((emotionalJSON.surprise - baseState.surprise) * (emotionalJSON.surprise - baseState.surprise));
-      squaredDiffs.push((emotionalJSON.anger - baseState.anger) * (emotionalJSON.anger - baseState.anger));
-      squaredDiffs.push((emotionalJSON.disgust - baseState.disgust) * (emotionalJSON.disgust - baseState.disgust));
-      squaredDiffs.push((emotionalJSON.fear - baseState.fear) * (emotionalJSON.fear - baseState.fear));
-      squaredDiffs.push((emotionalJSON.sadness - baseState.sadness) * (emotionalJSON.sadness - baseState.sadness));
-    }
+    squaredDiffs.push((emotionalJSON.joy - baseState.joy) * (emotionalJSON.joy - baseState.joy));
+    squaredDiffs.push((emotionalJSON.surprise - baseState.surprise) * (emotionalJSON.surprise - baseState.surprise));
+    squaredDiffs.push((emotionalJSON.anger - baseState.anger) * (emotionalJSON.anger - baseState.anger));
+    squaredDiffs.push((emotionalJSON.disgust - baseState.disgust) * (emotionalJSON.disgust - baseState.disgust));
+    squaredDiffs.push((emotionalJSON.fear - baseState.fear) * (emotionalJSON.fear - baseState.fear));
+    squaredDiffs.push((emotionalJSON.sadness - baseState.sadness) * (emotionalJSON.sadness - baseState.sadness));
     var sumOfSquaredDiffs = squaredDiffs.reduce(function(acc, val) {
       return(acc + val);
     }, 0);
