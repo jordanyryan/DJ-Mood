@@ -105,7 +105,6 @@ let addTracks = function(req, tracks, playlist, callback){
     }
   }).then(function(json){
     console.log("finished")
-    res.send(playlist)
   })
 }
 
