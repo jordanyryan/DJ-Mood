@@ -4,7 +4,6 @@ var passport = require('passport');
 var session = require('express-session')
 const userAgent = "DJ-Mood-Student-Project-DEVBOOTCAMP-(https://github.com/jordanyryan/DJ-Mood)-tomchang93@gmail.com";
 var User = require("./models/user");
-const requireDiacritics = require("diacritics");
 
 let getRandomSubarray = function(arr, size) {
   var shuffled = arr.slice(0), i = arr.length, min = i - size, temp, index;
