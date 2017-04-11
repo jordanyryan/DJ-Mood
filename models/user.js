@@ -11,6 +11,11 @@ var UserSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
+  },
+  preferences: {
+    type: String,
+    required: true,
+    trim: true
   }
 });
 
