@@ -16,7 +16,6 @@ var User = require("./models/user");
 var $ = require('jquery')
 
 
-
 //Configure Spotify strategy
 
 passport.use(new SpotifyStrategy({
@@ -41,7 +40,9 @@ passport.use(new SpotifyStrategy({
     var noEmailError = new Error("Your email privacy settings prevent you from signing into DJ Mood")
     done(noEmailError, null);
   }
+
 }));
+
 
 // translate data structure for session storage, func with 2 args
 passport.serializeUser(function(user, done){
@@ -54,6 +55,7 @@ passport.deserializeUser(function(userId, done){
 });
 var routes = require('./routes/index');
 var auth = require('./routes/auth')
+var profile = require('./routes/profile')
 
 var app = express();
 
