@@ -4,6 +4,8 @@ var router = express.Router();
 var fs = require('fs');
 var $ = require('jquery');
 var request = require('request');
+var spotify = require('../moodPlaylist');
+
 var kairosBaseCases = {
   happy: {
     joy: 100,
@@ -72,6 +74,7 @@ router.get('/login', function(req, res) {
 
 
 router.post('/videos', function(req, res, next) {
+  let username = req.user.username;
   request.post({
     url: ('https://api.kairos.com/v2/media?source=' + req.body.flv),
     headers: {
@@ -89,6 +92,7 @@ router.post('/videos', function(req, res, next) {
           app_key: '6db3ff0a241edbbe3d2b4f2943fb330e'
         }
       }, function(err, res) {
+      
         var emotionalJSON = JSON.parse(res.body);
         console.log(emotionalJSON.impressions);
         var userState = emotionalJSON.impressions[0].average_emotion
@@ -117,7 +121,7 @@ router.post('/videos', function(req, res, next) {
             matchingState = baseStates[i]
           }
         }
-        runner(matchingState);
+        spotify.runner( matchingState );
         // here we parse the emotions JSON and return one word emotional state
         // pass this word to preferences, get back another word of what kind of music to play
         // pass THAT word to playlist maker to compose playlist
