@@ -12,9 +12,9 @@ var UserSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  
+
   preferences: {
-    type: String,
+    type: Array,
     required: true,
     trim: true
 },
@@ -24,6 +24,12 @@ var UserSchema = new mongoose.Schema({
     trim: true,
     unique: true,
 
+  },
+  accessToken: {
+    type: String,
+    required: true,
+    trim: true,
+    unique: true
   }
 });
 
