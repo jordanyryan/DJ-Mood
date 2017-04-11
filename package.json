@@ -28,6 +28,10 @@
     "request-promise": "^4.2.0",
     "serve-favicon": "~2.3.0"
   },
+  "engines": {
+    "node": "7.8.0"
+  },
+
   "devDependencies": {
     "nodemon": "^1.11.0"
   }
