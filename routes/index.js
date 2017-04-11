@@ -1,7 +1,46 @@
+
 var express = require('express');
 var router = express.Router();
 var fs = require('fs');
-var $ = require('jquery')
+var $ = require('jquery');
+var request = require('request');
+var spotify = require('../moodPlaylist');
+
+var kairosBaseCases = {
+  happy: {
+    joy: 100,
+    surprise: 0,
+    sadness: 0,
+    anger: 0,
+    disgust: 0,
+    fear: 0
+  },
+  sad: {
+    joy: 0,
+    surprise: 0,
+    sadness: 100,
+    anger: 0,
+    disgust: 0,
+    fear: 0
+  },
+  angry: {
+    joy: 0,
+    surprise: 0,
+    sadness: 0,
+    anger: 100,
+    disgust: 0,
+    fear: 0
+  },
+  bored: {
+    joy: 0,
+    surprise: 0,
+    sadness: 0,
+    anger: 0,
+    disgust: 0,
+    fear: 0
+  }
+}
+
 
 /* GET home page */
 router.get('/', function(req, res) {
@@ -25,7 +64,6 @@ router.get('/profile', function(req, res) {
   } else {
     res.redirect('/login');
   }
-  
 });
 
 /* GET login page */
@@ -36,32 +74,61 @@ router.get('/login', function(req, res) {
 
 
 router.post('/videos', function(req, res, next) {
-  for (var i in req.body) {
-    var dataURL = i;
-  }
-  var videoBuffer = readBase64Video(dataURL);
-  var fileName = 'test.webm';
-  fs.writeFile('tmp/' + fileName, videoBuffer.data, function() {
-    res.redirect('/videos/api');
+  let username = req.user.username;
+  request.post({
+    url: ('https://api.kairos.com/v2/media?source=' + req.body.flv),
+    headers: {
+      app_id: '6d32c141',
+      app_key: '6db3ff0a241edbbe3d2b4f2943fb330e'
+    }
+  }, function(err, res) {
+    var idJSON = JSON.parse(res.body);
+    console.log('Giving Kairos some time to analyze the results...');
+    setTimeout(function() {
+      request.get({
+        url: ('https://api.kairos.com/v2/analytics/' + idJSON.id),
+        headers: {
+          app_id: '6d32c141',
+          app_key: '6db3ff0a241edbbe3d2b4f2943fb330e'
+        }
+      }, function(err, res) {
+      
+        var emotionalJSON = JSON.parse(res.body);
+        console.log(emotionalJSON.impressions);
+        var userState = emotionalJSON.impressions[0].average_emotion
+        console.log('Your emotions (this will be compared to our baselines):', userState);
+        var baseStates = Object.keys(kairosBaseCases);
+        console.log('Comparing to:', baseStates);
+        var bestMatch = 999999999;
+        var newMatch = 0;
+        for (var i = 0; i < baseStates.length; i++) {
+          var baseState = kairosBaseCases[baseStates[i]];
+          var squaredDiffs = []
+          for (var j = 0; j < 6; j++) {
+            squaredDiffs.push((userState.joy - baseState.joy) * (userState.joy - baseState.joy));
+            squaredDiffs.push((userState.surprise - baseState.surprise) * (userState.surprise - baseState.surprise));
+            squaredDiffs.push((userState.anger - baseState.anger) * (userState.anger - baseState.anger));
+            squaredDiffs.push((userState.disgust - baseState.disgust) * (userState.disgust - baseState.disgust));
+            squaredDiffs.push((userState.fear - baseState.fear) * (userState.fear - baseState.fear));
+            squaredDiffs.push((userState.sadness - baseState.sadness) * (userState.sadness - baseState.sadness));
+          }
+          var sumOfSquaredDiffs = squaredDiffs.reduce(function(acc, val) {
+            return(acc + val);
+          }, 0);
+          newMatch = Math.sqrt(sumOfSquaredDiffs);
+          if (newMatch < bestMatch) {
+            bestMatch = newMatch;
+            matchingState = baseStates[i]
+          }
+        }
+        spotify.runner( matchingState );
+        // here we parse the emotions JSON and return one word emotional state
+        // pass this word to preferences, get back another word of what kind of music to play
+        // pass THAT word to playlist maker to compose playlist
+        // pass playlist URI to front end and update the player.
+      });
+    }, 25000);
   });
-  // write data to temp file - DONE
-  // send temp file to api - below in /api
-  // run thru algorithm to trigger/compile playlists - on /api response
-  // get back uri of spotify playlist & return that to hit AJAX .done callback in webcam.js
 });
-
-router.get('/videos/api', function(req, res, next) {
-  console.log('redirected to someplace to build request and save the file')
-  // build out request
-  // on DONE redirect response to run thru kairos matching algorithm
-});
-
-function readBase64Video(data) {
-  var matches = data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-  var response = {};
-  response.type = matches[1];
-  response.data = new Buffer(matches[2], 'base64');
-  return response;
-};
 
 module.exports = router;

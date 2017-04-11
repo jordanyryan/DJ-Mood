@@ -1,10 +1,10 @@
 extends layout
 
 block content
-  .main.container
+  .main.container.text-xs-center
     .row
-      .col-md-8.col-md-offset-2
-        h1.display-4.m-b-2 About Us
-        p DJ Mood was created for the sole purpose of generating a playlist based on your mood
-
-        a.btn.btn-info-outline.btn-lg.m-t-1(href='/login') Get Started for FREE
+      .col-md-5
+        h1.display-4.m-b-2.about-head About DJ Mood
+        p.about-paragraph A playlist generator that listens to the outbursts of the soul.
+        p.about-paragraph DJ mood uses facial recognition software to analyze your facial expressions for emotions. We at DJ Mood believe in the power of music so we developed this tool to help you understand more of yourself.
+        a.btn.btn-info-outline.btn-lg.m-t-1(href='/login') Get Started
