@@ -16,6 +16,8 @@ var User = require("./models/user");
 var $ = require('jquery')
 
 
+
+
 //Configure Spotify strategy
 
 passport.use(new SpotifyStrategy({
@@ -59,9 +61,15 @@ var profile = require('./routes/profile')
 
 var app = express();
 
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+
+// rendering the preferences for users based on Mood
+app.get('/preferences', (req, res) => {
+  res.render('preferences');
+})
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
