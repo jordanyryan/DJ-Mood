@@ -1,3 +1,4 @@
+require('dotenv').config(); 
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -10,8 +11,7 @@ var SpotifyStrategy = require('passport-spotify').Strategy;
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var User = require("./models/user");
-var $ = require('jquery')
-
+var $ = require('jquery');
 
 
 //Configure Spotify strategy
