@@ -1,7 +1,6 @@
 extends layout
 
 block content
-
   .main.container.clearfix
     .row
       .col-md-10
@@ -9,9 +8,15 @@ block content
       h1.display-4 Welcome!
         h1.display-4
           img.avatar.img-circle.hidden-xs-down(src=user.photo alt='avatar')
-          | Username: #{user.name}
+          | Username: #{user.username}
           br
           | Email: #{user.email}
-
-          h4
+      hr
+      div.container.preferences
+        p When Happy, your Music Choice is: #{user.preferences[0]}
+        p When Sad, your Music Choice is: #{user.preferences[1]}
+        p When Angry, your Music Choice is: #{user.preferences[2]}
+        p When Relaxed, your Music Choice is: #{user.preferences[3]}
+        p When Chilled, your Music Choice is: #{user.preferences[4]}
+        h4
             a(href='/preferences') Click to Edit Preferences
