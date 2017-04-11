@@ -71,6 +71,10 @@ app.get('/preferences', (req, res) => {
   res.render('preferences');
 })
 
+app.post('/preferences', function(req,res){
+  console.log(req.body);
+})
+
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
