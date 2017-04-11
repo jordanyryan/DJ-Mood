@@ -1,26 +1,16 @@
-var express = require('express')
-var router = express.Router();
-var passport = require('passport')
-
-
-//GET /auth/login/spotify
+const express = require('express')
+const router = express.Router();
+const passport = require('passport')
 
 router.get('/login/spotify',
-
   passport.authenticate('spotify', {scope: 'user-read-email user-read-private playlist-modify-public playlist-modify-private'})
-  );
+);
  
-
-
-//GET /auth/spotify/callback
-
 router.get('/spotify/callback',
   passport.authenticate('spotify', {failureRedirect: '/'}),
   function(req, res) {
-
-    // Success auth, redirect to profile page
-    res.redirect('/profile');
-  });
+  res.redirect('/profile');
+});
 
 router.get('/logout', function(req, res){
   req.logout();

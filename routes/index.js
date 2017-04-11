@@ -1,12 +1,11 @@
-
-var express = require('express');
-var router = express.Router();
-var fs = require('fs');
-var $ = require('jquery');
-var request = require('request');
-var spotify = require('../moodPlaylist');
-var passport = require('passport')
-let session = require('express-session')
+const express = require('express');
+const router = express.Router();
+const fs = require('fs');
+const $ = require('jquery');
+const request = require('request');
+const spotify = require('../moodPlaylist');
+const passport = require('passport')
+const session = require('express-session')
 var kairosBaseCases = {
   happy: {
     joy: 100,
@@ -32,7 +31,7 @@ var kairosBaseCases = {
     disgust: 0,
     fear: 0
   },
-  bored: {
+  chill: {
     joy: 0,
     surprise: 0,
     sadness: 0,
@@ -41,26 +40,18 @@ var kairosBaseCases = {
     fear: 0
   }
 }
-
-
-/* GET home page */
 router.get('/', function(req, res) {
-  
-
   res.render('index', { title: 'Home', user: req.user });
 });
 
-/* GET about page */
 router.get('/about', function(req, res) {
   res.render('about', { title: 'About', user: req.user });
 });
 
-/* GET video page */
 router.get('/video', function(req, res) {
   res.render('video', { title: 'Mood Playlist', user: req.user });
 });
 
-/* GET profile page */
 router.get('/profile', function(req, res) {
   if(req.user) {
     res.render('profile', { title: 'Profile', user: req.user });
@@ -69,12 +60,9 @@ router.get('/profile', function(req, res) {
   }
 });
 
-/* GET login page */
 router.get('/login', function(req, res) {
   res.render('login', { title: 'Log In', user: req.user });
 });
-
-
 
 router.post('/videos', function(req, res, next) {
   let username = req.user.username;
@@ -91,15 +79,11 @@ router.post('/videos', function(req, res, next) {
     setTimeout(function() {
       let playlist = pingUntilAnalyzed(idJSON.id, req)
       console.log(playlist)
-      // pass this word to preferences, get back another word of what kind of music to play
-      // pass THAT word to playlist maker to compose playlist
-      // pass playlist URI to front end and update the player.
     }, 5000);
   });
 });
 
 function pingUntilAnalyzed(id, req) {
-  // check if input has been analyzed
   request.get({
     url: ('https://api.kairos.com/v2/analytics/' + id),
     headers: {
@@ -107,13 +91,10 @@ function pingUntilAnalyzed(id, req) {
       app_key: process.env.KAIROS_APP_KEY
     }
   }, function(err, res) {
-
     var responseJSON = JSON.parse(res.body)
     if (responseJSON.impressions) {
-      // if response has impressions, return it and move on
       averageEmotions(responseJSON, req);
     } else {
-      // if not, wait 3s and make another request
       console.log("Analyzing...")
       setTimeout(function() {
         pingUntilAnalyzed(id, req);
