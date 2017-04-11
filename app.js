@@ -12,6 +12,7 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var User = require("./models/user");
 var $ = require('jquery');
+const removeDiacritics = require('diacritics')
 
 
 //Configure Spotify strategy

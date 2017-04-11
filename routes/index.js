@@ -85,10 +85,12 @@ router.post('/videos', function(req, res, next) {
       app_key: process.env.KAIROS_APP_KEY
     }
   }, function(err, res) {
+    console.log(res.body)
     var idJSON = JSON.parse(res.body);
     console.log('Giving Kairos some time to analyze the results...');
     setTimeout(function() {
-      pingUntilAnalyzed(idJSON.id)
+      let playlist = pingUntilAnalyzed(idJSON.id, req)
+      console.log(playlist)
       // pass this word to preferences, get back another word of what kind of music to play
       // pass THAT word to playlist maker to compose playlist
       // pass playlist URI to front end and update the player.
@@ -96,7 +98,7 @@ router.post('/videos', function(req, res, next) {
   });
 });
 
-function pingUntilAnalyzed(id) {
+function pingUntilAnalyzed(id, req) {
   // check if input has been analyzed
   request.get({
     url: ('https://api.kairos.com/v2/analytics/' + id),
@@ -105,21 +107,22 @@ function pingUntilAnalyzed(id) {
       app_key: process.env.KAIROS_APP_KEY
     }
   }, function(err, res) {
+
     var responseJSON = JSON.parse(res.body)
     if (responseJSON.impressions) {
       // if response has impressions, return it and move on
-      averageEmotions(responseJSON);
+      averageEmotions(responseJSON, req);
     } else {
       // if not, wait 3s and make another request
       console.log("Analyzing...")
       setTimeout(function() {
-        pingUntilAnalyzed(id);
+        pingUntilAnalyzed(id, req);
       }, 3000);
     };
   })
 };
 
-function averageEmotions(emotionalJSON) {
+function averageEmotions(emotionalJSON, req) {
   var impressions = emotionalJSON.impressions.map(function(impression) {
     return(impression.average_emotion);
   });
@@ -148,10 +151,10 @@ function averageEmotions(emotionalJSON) {
   averageEmotions.disgust = sumOfDisgust / impressions.length;
   averageEmotions.fear = sumOfFear / impressions.length;
   averageEmotions.surprise = sumOfSurprise / impressions.length;
-  analyzeKairosOutput(averageEmotions)
+  analyzeKairosOutput(averageEmotions, req)
 }
 
-function analyzeKairosOutput(emotionalJSON) {
+function analyzeKairosOutput(emotionalJSON, req) {
   var baseStates = Object.keys(kairosBaseCases);
   var bestMatch = 999999999;
   var newMatch = 0;
@@ -173,7 +176,7 @@ function analyzeKairosOutput(emotionalJSON) {
       matchingState = baseStates[i]
     }
   }
-  spotify.runner(matchingState);
+  spotify.runner([matchingState, req]);
 };
 
 module.exports = router;

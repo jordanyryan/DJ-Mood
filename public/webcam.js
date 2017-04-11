@@ -13,6 +13,7 @@ $(document).ready(function() {
       // e.g. ajax call to save video on server
       $("#recorder0").remove();
       $("#webcam-container").append("<h3>Please wait while we analyze your video.<h3>")
+      console.log("Hi Iuliia")
       $.post('/videos', outputs, function(response) {
         alert('Video saved');
       });
