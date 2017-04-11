@@ -23,7 +23,11 @@ var UserSchema = new mongoose.Schema({
     required: true,
     trim: true,
     unique: true,
-
+  },
+  accessToken: {
+    type: String,
+    required: true,
+    trim: true
   }
 });
 
