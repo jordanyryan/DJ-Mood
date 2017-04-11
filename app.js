@@ -1,3 +1,4 @@
+// load environment variables
 require('dotenv').config(); 
 var express = require('express');
 var path = require('path');
@@ -15,6 +16,7 @@ var $ = require('jquery');
 const removeDiacritics = require('diacritics')
 
 
+
 //Configure Spotify strategy
 
 passport.use(new SpotifyStrategy({
@@ -22,24 +24,28 @@ passport.use(new SpotifyStrategy({
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
   callbackURL: "http://localhost:3000/auth/spotify/callback"
 }, function(accessToken, refreshToken, profile, done){
+
   (console.log(accessToken))
   if (profile.emails) {
   User.findOneAndUpdate({
     email: profile.emails[0].value, 
   }, {
+
     name: profile.displayName,
     email: profile.emails[0].value ,
     username: profile.id,
     accessToken: accessToken
   }, {
     upsert: true
-  }, 
+  },
   done);
   } else {
     var noEmailError = new Error("Your email privacy settings prevent you from signing into DJ Mood")
     done(noEmailError, null);
-  } 
+  }
+
 }));
+
 
 // translate data structure for session storage, func with 2 args
 passport.serializeUser(function(user, done){
@@ -52,12 +58,23 @@ passport.deserializeUser(function(userId, done){
 });
 var routes = require('./routes/index');
 var auth = require('./routes/auth')
+var profile = require('./routes/profile')
 
 var app = express();
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+
+// rendering the preferences for users based on Mood
+app.get('/preferences', (req, res) => {
+  res.render('preferences');
+})
+
+app.post('/preferences', function(req,res){
+  console.log(req.body);
+})
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -68,12 +85,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // mongodb connection
-mongoose.connect('mongodb://admin:admin@ds155150.mlab.com:55150/dj-mood');
+mongoose.connect(process.env.DB_URI);
 var db = mongoose.connection;
 
 //Session config for passport
 var sessionOptions = {
-  secret: "this is super secret",
+  secret: process.env.DB_SECRET ,
   resave: true,
   saveUninitialized: true,
   store: new MongoStore({

@@ -1,0 +1,83 @@
+extends layout
+
+block content
+
+  .main.container.clearfix
+    .row
+      .col-md-10.col-md-offset-2
+      if(user)
+      h3 We want to know what kind of music you like based on your mood
+      form
+        |
+        |
+
+        legend Select Music Type When:
+        |
+        form(action='/signup',method='post')
+          fieldset
+            p
+              label Happy
+              br
+              select#myList
+                option(value='1') Alternative
+                option(value='2') Classical
+                option(value='3') Country
+                option(value='4') Dance
+                option(value='5') Hip-Hop/Rap
+                option(value='6') R&B Soul
+                option(value='7') Reggae
+
+              fieldset
+                p
+                label Sad
+                br
+                select#myList
+                  option(value='1') Alternative
+                  option(value='2') Classical
+                  option(value='3') Country
+                  option(value='4') Dance
+                  option(value='5') Hip-Hop/Rap
+                  option(value='6') R&B Soul
+                  option(value='7') Reggae
+                  option(value='8') Rock
+              fieldset
+                p
+                label Angry
+                br
+                select#myList
+                  option(value='1') Alternative
+                  option(value='2') Classical
+                  option(value='3') Country
+                  option(value='4') Dance
+                  option(value='5') Hip-Hop/Rap
+                  option(value='6') R&B Soul
+                  option(value='7') Reggae
+                  option(value='8') Rock
+
+              fieldset
+                p
+                label Relaxed
+                br
+                select#myList
+                  option(value='1') Alternative
+                  option(value='2') Classical
+                  option(value='3') Country
+                  option(value='4') Dance
+                  option(value='5') Hip-Hop/Rap
+                  option(value='6') R&B Soul
+                  option(value='7') Reggae
+                  option(value='8') Rock
+
+              fieldset
+                p
+                label Bored
+                br
+                select#myList
+                  option(value='1') Alternative
+                  option(value='2') Classical
+                  option(value='3') Country
+                  option(value='4') Dance
+                  option(value='5') Hip-Hop/Rap
+                  option(value='6') R&B Soul
+                  option(value='7') Reggae
+                  option(value='8') Rock

@@ -39,7 +39,7 @@
 
 body {
   background: #1d2a33 url('../images/bg.jpg') no-repeat;
-  background-size: cover; 
+  background-size: cover;
 }
 
 a {
@@ -110,7 +110,7 @@ a:hover {
   background: rgba(255,255,255, .12);
 }
 .btn-light:hover {
-  background: rgba(255,255,255, .2);  
+  background: rgba(255,255,255, .2);
 }
 .active,
 .btn {
@@ -184,7 +184,7 @@ a:hover {
   }
 }
 
-@media (min-width: 48em) { 
+@media (min-width: 48em) {
   .navbar {
     min-height: 70px;
   }
@@ -199,4 +199,8 @@ a:hover {
   .main {
     padding-top: 8rem;
   }
+}
+
+#myList {
+  color: black; 
 }
