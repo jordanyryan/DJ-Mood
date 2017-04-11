@@ -12,35 +12,4 @@ block content
           | Username: #{user.name}
           br
           | Email: #{user.email}
-          br
-          br
-          h3 Based on your mood
-            p Would you like to listen to?
-            p If not chose a selection below:
-              br
-              br
-              form(method='POST' action='/preferences')
-
-              input(type="radio", name="preferences", value="0", checked=preferences=="Happy")
-              |Happy
-              br
-              input(type="radio", name="preferences", value="1", checked=preferences=="Excited")
-              |Excited
-              br
-              input(type="radio", name="preferences", value="2", checked=preferences=="Sad")
-              |Sad
-              br
-              input(type="radio", name="preferences", value="3", checked=preferences=="Angry")
-              |Angry
-              br
-              input(type="radio", name="preferences", value="4", checked=preferences=="Relaxed")
-              |Relaxed
-              br
-              input(type="radio", name="preferences", value="5", checked=preferences=="Bored")
-              |Bored
-              br
-              input(type="radio", name="preferences", value="6", checked=preferences=="Despondent")
-              |Despondent
-              br
-              br
-              input(type='submit' Submit)
+      
