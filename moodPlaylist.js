@@ -105,10 +105,11 @@ let addTracks = function(req, tracks, playlist, callback){
     }
   }).then(function(json){
     console.log("finished")
+    console.log(finalResponse)
   })
 }
 
-let runner = function( req ){
+let runner = function(req){
   getTracks( req, function( tracks ){
     getIds(tracks, req, function(trackUri){
       createPlaylist( req, trackUri, function( playlist ){

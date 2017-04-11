@@ -65,6 +65,7 @@ router.get('/login', function(req, res) {
 });
 
 router.post('/videos', function(req, res, next) {
+  let finalResponse = res;
   let username = req.user.username;
   request.post({
     url: ('https://api.kairos.com/v2/media?source=' + req.body.flv),
@@ -73,12 +74,10 @@ router.post('/videos', function(req, res, next) {
       app_key: process.env.KAIROS_APP_KEY
     }
   }, function(err, res) {
-    console.log(res.body)
     var idJSON = JSON.parse(res.body);
     console.log('Giving Kairos some time to analyze the results...');
     setTimeout(function() {
-      let playlist = pingUntilAnalyzed(idJSON.id, req)
-      console.log(playlist)
+      pingUntilAnalyzed(idJSON.id, req, res)
     }, 5000);
   });
 });
@@ -93,7 +92,7 @@ function pingUntilAnalyzed(id, req) {
   }, function(err, res) {
     var responseJSON = JSON.parse(res.body)
     if (responseJSON.impressions) {
-      averageEmotions(responseJSON, req);
+      averageEmotions(responseJSON, req, res);
     } else {
       console.log("Analyzing...")
       setTimeout(function() {
@@ -135,7 +134,7 @@ function averageEmotions(emotionalJSON, req) {
   analyzeKairosOutput(averageEmotions, req)
 }
 
-function analyzeKairosOutput(emotionalJSON, req) {
+function analyzeKairosOutput(emotionalJSON, req, res) {
   var baseStates = Object.keys(kairosBaseCases);
   var bestMatch = 999999999;
   var newMatch = 0;
@@ -157,6 +156,7 @@ function analyzeKairosOutput(emotionalJSON, req) {
       matchingState = baseStates[i]
     }
   }
+  // JD & Keishas preferences get added here
   spotify.runner([matchingState, req]);
 };
 
