@@ -7,8 +7,9 @@ var passport = require('passport')
 
 router.get('/login/spotify',
 
-  passport.authenticate('spotify', {scope: 'user-read-email user-read-private'}));
-
+  passport.authenticate('spotify', {scope: 'user-read-email user-read-private playlist-modify-public playlist-modify-private'})
+  );
+ 
 
 
 //GET /auth/spotify/callback
@@ -16,6 +17,7 @@ router.get('/login/spotify',
 router.get('/spotify/callback',
   passport.authenticate('spotify', {failureRedirect: '/'}),
   function(req, res) {
+
     // Success auth, redirect to profile page
     res.redirect('/profile');
   });

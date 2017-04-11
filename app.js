@@ -21,16 +21,15 @@ passport.use(new SpotifyStrategy({
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
   callbackURL: "http://localhost:3000/auth/spotify/callback"
 }, function(accessToken, refreshToken, profile, done){
-  console.log(profile);
-  console.log("dsfsdfsad")
-  
+  (console.log(accessToken))
   if (profile.emails) {
   User.findOneAndUpdate({
-    email: profile.emails[0].value 
+    email: profile.emails[0].value, 
   }, {
     name: profile.displayName,
     email: profile.emails[0].value ,
-    username: profile.id
+    username: profile.id,
+    accessToken: accessToken
   }, {
     upsert: true
   }, 

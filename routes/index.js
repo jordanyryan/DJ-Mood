@@ -5,7 +5,8 @@ var fs = require('fs');
 var $ = require('jquery');
 var request = require('request');
 var spotify = require('../moodPlaylist');
-
+var passport = require('passport')
+let session = require('express-session')
 var kairosBaseCases = {
   happy: {
     joy: 100,
@@ -44,6 +45,8 @@ var kairosBaseCases = {
 
 /* GET home page */
 router.get('/', function(req, res) {
+  
+
   res.render('index', { title: 'Home', user: req.user });
 });
 

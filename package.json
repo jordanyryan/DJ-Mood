@@ -19,6 +19,7 @@
     "jquery": "^3.2.1",
     "mongoose": "^4.5.2",
     "morgan": "~1.6.1",
+    "node-inspector": "^1.0.1",
     "nodemon": "^1.11.0",
     "passport": "^0.3.2",
     "passport-spotify": "^0.3.1",
