@@ -103,10 +103,9 @@ function pingUntilAnalyzed(id) {
     }
   }, function(err, res) {
     var responseJSON = JSON.parse(res.body)
-    console.log(responseJSON);
     if (responseJSON.impressions) {
       // if response has impressions, return it and move on
-      analyzeKairosOutput(responseJSON);
+      averageEmotions(responseJSON);
     } else {
       // if not, wait 3s and make another request
       console.log("Analyzing...")
@@ -117,24 +116,52 @@ function pingUntilAnalyzed(id) {
   })
 };
 
+function averageEmotions(emotionalJSON) {
+  var impressions = emotionalJSON.impressions.map(function(impression) {
+    return(impression.average_emotion);
+  });
+  var sumOfSadness = impressions.reduce(function(acc, impression) {
+    return(acc + impression.sadness);
+  }, 0);
+  var sumOfJoy = impressions.reduce(function(acc, impression) {
+    return(acc + impression.joy);
+  }, 0);
+  var sumOfAnger = impressions.reduce(function(acc, impression) {
+    return(acc + impression.anger);
+  }, 0);
+  var sumOfSurprise = impressions.reduce(function(acc, impression) {
+    return(acc + impression.surprise);
+  }, 0);
+  var sumOfDisgust = impressions.reduce(function(acc, impression) {
+    return(acc + impression.disgust);
+  }, 0);
+  var sumOfFear = impressions.reduce(function(acc, impression) {
+    return(acc + impression.fear);
+  }, 0);
+  var averageEmotions = {};
+  averageEmotions.sadness = sumOfSadness / impressions.length;
+  averageEmotions.joy = sumOfJoy / impressions.length;
+  averageEmotions.anger = sumOfAnger / impressions.length;
+  averageEmotions.disgust = sumOfDisgust / impressions.length;
+  averageEmotions.fear = sumOfFear / impressions.length;
+  averageEmotions.surprise = sumOfSurprise / impressions.length;
+  analyzeKairosOutput(averageEmotions)
+}
+
 function analyzeKairosOutput(emotionalJSON) {
-  console.log(emotionalJSON.impressions);
-  var userState = emotionalJSON.impressions[0].average_emotion
-  console.log('Your emotions (this will be compared to our baselines):', userState);
   var baseStates = Object.keys(kairosBaseCases);
-  console.log('Comparing to:', baseStates);
   var bestMatch = 999999999;
   var newMatch = 0;
   for (var i = 0; i < baseStates.length; i++) {
     var baseState = kairosBaseCases[baseStates[i]];
     var squaredDiffs = []
     for (var j = 0; j < 6; j++) {
-      squaredDiffs.push((userState.joy - baseState.joy) * (userState.joy - baseState.joy));
-      squaredDiffs.push((userState.surprise - baseState.surprise) * (userState.surprise - baseState.surprise));
-      squaredDiffs.push((userState.anger - baseState.anger) * (userState.anger - baseState.anger));
-      squaredDiffs.push((userState.disgust - baseState.disgust) * (userState.disgust - baseState.disgust));
-      squaredDiffs.push((userState.fear - baseState.fear) * (userState.fear - baseState.fear));
-      squaredDiffs.push((userState.sadness - baseState.sadness) * (userState.sadness - baseState.sadness));
+      squaredDiffs.push((emotionalJSON.joy - baseState.joy) * (emotionalJSON.joy - baseState.joy));
+      squaredDiffs.push((emotionalJSON.surprise - baseState.surprise) * (emotionalJSON.surprise - baseState.surprise));
+      squaredDiffs.push((emotionalJSON.anger - baseState.anger) * (emotionalJSON.anger - baseState.anger));
+      squaredDiffs.push((emotionalJSON.disgust - baseState.disgust) * (emotionalJSON.disgust - baseState.disgust));
+      squaredDiffs.push((emotionalJSON.fear - baseState.fear) * (emotionalJSON.fear - baseState.fear));
+      squaredDiffs.push((emotionalJSON.sadness - baseState.sadness) * (emotionalJSON.sadness - baseState.sadness));
     }
     var sumOfSquaredDiffs = squaredDiffs.reduce(function(acc, val) {
       return(acc + val);

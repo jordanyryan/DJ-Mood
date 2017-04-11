@@ -11,6 +11,8 @@ $(document).ready(function() {
     target: 'webcam', // pass the id of the div where you want to embed 
     complete: function(outputs){ // called when the video has been saved
       // e.g. ajax call to save video on server
+      $("#recorder0").remove();
+      $("#webcam-container").append("<h3>Please wait while we analyze your video.<h3>")
       $.post('/videos', outputs, function(response) {
         alert('Video saved');
       });
