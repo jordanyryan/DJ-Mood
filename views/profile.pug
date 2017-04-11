@@ -6,10 +6,12 @@ block content
     .row
       .col-md-10
       if(user)
-      h1 Welcome!
+      h1.display-4 Welcome!
         h1.display-4
           img.avatar.img-circle.hidden-xs-down(src=user.photo alt='avatar')
           | Username: #{user.name}
           br
           | Email: #{user.email}
-      
+
+          h4
+            a(href='/preferences') Click to Edit Preferences
