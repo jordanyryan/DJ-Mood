@@ -3,12 +3,12 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var SpotifyStrategy = require('passport-spotify').Strategy;
 var session = require('express-session');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
 var MongoStore = require('connect-mongo')(session);
 var User = require("./models/user");
 var $ = require('jquery');
@@ -21,16 +21,15 @@ passport.use(new SpotifyStrategy({
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
   callbackURL: "http://localhost:3000/auth/spotify/callback"
 }, function(accessToken, refreshToken, profile, done){
-  console.log(profile);
-  console.log("dsfsdfsad")
-  
+  (console.log(accessToken))
   if (profile.emails) {
   User.findOneAndUpdate({
-    email: profile.emails[0].value 
+    email: profile.emails[0].value, 
   }, {
     name: profile.displayName,
     email: profile.emails[0].value ,
-    username: profile.id
+    username: profile.id,
+    accessToken: accessToken
   }, {
     upsert: true
   }, 
