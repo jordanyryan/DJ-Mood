@@ -88,8 +88,8 @@ let createPlaylist = function(req, trackUri , callback){
     scope: 'playlist-modify-public'
   },
   function(error, response, body){
-    console.log(body);
     let playlist = JSON.parse(body).id
+    localStorage.setItem('playlistID', playlist);
     callback(playlist)
   });
 };
@@ -105,14 +105,15 @@ let addTracks = function(req, tracks, playlist, callback){
     }
   }).then(function(json){
     console.log("finished")
+    return playlist
   })
 }
 
-let runner = function(req){
-  getTracks( req, function( tracks ){
-    getIds(tracks, req, function(trackUri){
-      createPlaylist( req, trackUri, function( playlist ){
-        addTracks(req, trackUri,  playlist, function(){
+let runner = function( req ){
+  return getTracks( req, function( tracks ){
+    return getIds(tracks, req, function(trackUri){
+      return createPlaylist( req, trackUri, function( playlist ){
+        return addTracks(req, trackUri,  playlist, function(){
         })
       })
     });

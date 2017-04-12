@@ -1,4 +1,4 @@
-require('dotenv').config(); 
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
@@ -12,6 +12,11 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const User = require("./models/user");
 const $ = require('jquery');
+var LocalStorage = require('node-localstorage').LocalStorage;
+if ( typeof localStorage === "undefined" || localStorage === null){
+  localStorage = new LocalStorage('./scratch');
+}
+
 const expressValidator = require('express-validator')
 
 passport.use(new SpotifyStrategy({
@@ -22,22 +27,29 @@ passport.use(new SpotifyStrategy({
   (console.log(accessToken))
   if (profile.emails) {
   User.findOneAndUpdate({
-    email: profile.emails[0].value, 
+    email: profile.emails[0].value,
   }, {
     name: profile.displayName,
     email: profile.emails[0].value ,
     username: profile.id,
-    accessToken: accessToken, 
+    accessToken: accessToken,
     preferences: []
   }, {
     upsert: true
-  }, 
+  },
   done);
   } else {
     var noEmailError = new Error("Your email privacy settings prevent you from signing into DJ Mood")
     done(noEmailError, null);
-  } 
+  }
 }));
+
+passport.serializeUser(function(user, done) {
+    done(null, user.id);
+});
+
+passport.deserializeUser(function(userId, done) {
+    User.findById(userId, done);
 
 passport.serializeUser(function(user, done){
   done(null, user.id);
@@ -45,6 +57,7 @@ passport.serializeUser(function(user, done){
 
 passport.deserializeUser(function(userId, done){
   User.findById(userId, done);
+
 });
 
 var routes = require('./routes/index');
@@ -52,6 +65,7 @@ var auth = require('./routes/auth')
 
 
 var app = express();
+
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -79,6 +93,7 @@ var sessionOptions = {
 };
 
 app.use(session(sessionOptions))
+
 
 app.use(passport.initialize());
 

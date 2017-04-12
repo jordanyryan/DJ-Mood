@@ -57,10 +57,8 @@ router.get('/about', function(req, res) {
 });
 
 router.get('/video', function(req, res) {
-    res.render('video', {
-        title: 'Mood Playlist',
-        user: req.user
-    });
+  let url = `https://embed.spotify.com/?uri=spotify%3Auser%3A${req.user.username}%3Aplaylist%3A${localStorage.getItem("playlistID")}`
+  res.render('video', { title: 'Mood Playlist', url: url, user: req.user });
 });
 
 router.get('/profile', function(req, res) {
@@ -98,6 +96,7 @@ router.post('/profile', (req, res) => {
 router.post('/videos', function(req, res, next) {
   let finalResponse = res;
   let username = req.user.username;
+  let playlist = null;
   request.post({
     url: ('https://api.kairos.com/v2/media?source=' + req.body.flv),
     headers: {
@@ -123,7 +122,7 @@ function pingUntilAnalyzed(id, req) {
   }, function(err, res) {
     var responseJSON = JSON.parse(res.body)
     if (responseJSON.impressions) {
-      averageEmotions(responseJSON, req, res);
+      return averageEmotions(responseJSON, req);
     } else {
       console.log("Analyzing...")
       setTimeout(function() {
@@ -162,7 +161,7 @@ function averageEmotions(emotionalJSON, req) {
   averageEmotions.disgust = sumOfDisgust / impressions.length;
   averageEmotions.fear = sumOfFear / impressions.length;
   averageEmotions.surprise = sumOfSurprise / impressions.length;
-  analyzeKairosOutput(averageEmotions, req)
+  return analyzeKairosOutput(averageEmotions, req)
 }
 
 function analyzeKairosOutput(emotionalJSON, req) {
