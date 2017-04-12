@@ -201,19 +201,15 @@ a:hover {
 
 .myList {
   color: black;
-  font-family: 'Monoton', cursive;
+  font-family: "Lato"
 }
 
-.submit{
-  color: black;
-  border-top: 30px;
-  margin-top: 30px;
-  indent: 20px;
-  font-family: 'Monoton', cursive;
-}
 
 .container.preferences p, h4 {
   text-align: center;
   padding-bottom: 20px;
+}
 
+a{
+  color: #84bd00;
 }

@@ -2,14 +2,14 @@ nav.navbar.navbar-fixed-top.navbar-dark.bg-inverse
   button.navbar-toggler.hidden-md-up.pull-xs-right(type='button', data-toggle='collapse', data-target='#navbar') &#x2630;
   #navbar.navbar-nav.collapse.navbar-toggleable-sm
     .container
-      a.navbar-brand(href='/')
+      a.navbar-brand#nav-home(href='/')
+        | DJ-Mood
+        img.float-left#nav-home(src="../images/dj-mood.png" alt="Image Title" style="height:35px")
 
-       //- i.icn-logo.material-icons#nav-home home
-        //-  span#nav-home.name DJ Mood
+      //-  i.icn-logo.material-icons#nav-home home
+      //-    span#nav-home.name DJ Mood
+      
         
-        
-      img.float-left(src="../images/dj-mood.png" alt="Image Title" style="height:35px")
-      | DJ-Mood
       .nav-items.clearfix
         a.nav-item.nav-link(href='/about') About
         a.nav-item.nav-link(href='/video') Playlist
