@@ -48,16 +48,8 @@ passport.serializeUser(function(user, done) {
     done(null, user.id);
 });
 
-passport.deserializeUser(function(userId, done) {
-    User.findById(userId, done);
-
-passport.serializeUser(function(user, done){
-  done(null, user.id);
-});
-
 passport.deserializeUser(function(userId, done){
   User.findById(userId, done);
-
 });
 
 var routes = require('./routes/index');
@@ -106,27 +98,27 @@ app.use('/', routes);
 app.use('/auth', auth);
 
 app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
 if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    });
-}
-
-app.use(function(err, req, res, next) {
+  app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,
-        error: {}
+        error: err
     });
+  });
+}
+
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  res.render('error', {
+      message: err.message,
+      error: {}
+  });
 });
 
 module.exports = app;
