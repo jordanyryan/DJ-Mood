@@ -32,8 +32,7 @@ passport.use(new SpotifyStrategy({
     name: profile.displayName,
     email: profile.emails[0].value ,
     username: profile.id,
-    accessToken: accessToken,
-    preferences: []
+    accessToken: accessToken
   }, {
     upsert: true
   },

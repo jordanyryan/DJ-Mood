@@ -10,7 +10,7 @@ $(document).ready(function() {
     target: 'webcam',
     complete: function(outputs){
       $("#recorder0").remove();
-      $("#webcam-container").append("<h3>Please wait while we analyze your video.<h3>")
+      $("#webcam-container").append("<h3 id='alert'>Please wait while we analyze your video.<h3>")
       $.post('/videos', outputs, function(response) {
         // doesnt get called
       });
@@ -35,7 +35,7 @@ var checkForDoneness = function() {
         },
         200: function(data, textStatus, xhr) {
           clearInterval(isDone);
-          console.log(data);
+          $("#alert").text('Your playlist:');
           $('iframe').attr('src', data);
         }
       }
