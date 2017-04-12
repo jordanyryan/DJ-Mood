@@ -57,10 +57,8 @@ router.get('/about', function(req, res) {
 });
 
 router.get('/video', function(req, res) {
-    res.render('video', {
-        title: 'Mood Playlist',
-        user: req.user
-    });
+  let url = `https://embed.spotify.com/?uri=spotify%3Auser%3A${req.user.username}%3Aplaylist%3A${localStorage.getItem("playlistID")}`
+  res.render('video', { title: 'Mood Playlist', url: url, user: req.user });
 });
 
 router.get('/profile', function(req, res) {
@@ -102,12 +100,10 @@ router.post('/videos', function(req, res, next) {
       app_key: process.env.KAIROS_APP_KEY
     }
   }, function(err, res) {
-    console.log(res.body)
     var idJSON = JSON.parse(res.body);
     console.log('Giving Kairos some time to analyze the results...');
     setTimeout(function() {
       req.playlist = pingUntilAnalyzed(idJSON.id, req)
-      console.log(req.playlist)
     }, 5000);
   });
 });

@@ -88,8 +88,9 @@ let createPlaylist = function(req, trackUri , callback){
     scope: 'playlist-modify-public'
   },
   function(error, response, body){
-    req[1].playlist = JSON.parse(body).id
-    callback(req[1].playlist)
+    let playlist = JSON.parse(body).id
+    localStorage.setItem('playlistID', playlist);
+    callback(playlist)
   });
 };
 
