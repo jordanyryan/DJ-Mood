@@ -42,6 +42,16 @@ var kairosBaseCases = {
   }
 }
 
+router.get('/playlist', function(req, res) {
+  if (!localStorage.getItem('playlistID')) {
+    res.status(202).send();
+    console.log('not done yet')
+  } else {
+    let url = `https://embed.spotify.com/?uri=spotify%3Auser%3A${req.user.username}%3Aplaylist%3A${localStorage.getItem("playlistID")}`
+    res.send(url);
+  }
+});
+
 router.get('/', function(req, res) {
     res.render('index', {
         title: 'Home',
@@ -94,9 +104,8 @@ router.post('/profile', (req, res) => {
 })
 
 router.post('/videos', function(req, res, next) {
-  let finalResponse = res;
+  localStorage.removeItem('playlistID');
   let username = req.user.username;
-  let playlist = null;
   request.post({
     url: ('https://api.kairos.com/v2/media?source=' + req.body.flv),
     headers: {

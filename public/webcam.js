@@ -12,19 +12,28 @@ $(document).ready(function() {
       $("#recorder0").remove();
       $("#webcam-container").append("<h3>Please wait while we analyze your video.<h3>")
       $.post('/videos', outputs, function(response) {
-        alert('Video saved');
+        // doesnt get called
       });
+      checkForDoneness();
     }
   });
+});
 
-  $('#snap').click(function(){
-    Recorder.show({ 
-      complete: function(outputs) { 
-        $('#png_url').val(outputs['png']); 
-        $('#flv_url').val(outputs['flv']); 
-        $('#mp4_url').val(outputs['mp4']); 
-        $('#3gp_url').val(outputs['3gp']); 
+var checkForDoneness = function() {
+  var isDone = setInterval(function() {
+    $.ajax({
+      url: '/playlist',
+      method: 'GET',
+      statusCode: {
+        202: function(data, textStatus, xhr) {
+          console.log('Waiting');
+        },
+        200: function(data, textStatus, xhr) {
+          clearInterval(isDone);
+          console.log(data);
+          $('iframe').attr('src', data);
+        }
       }
     });
-  });
-});
+  }, 3000);
+}
