@@ -43,12 +43,20 @@ passport.use(new SpotifyStrategy({
   }
 }));
 
+passport.serializeUser(function(user, done) {
+    done(null, user.id);
+});
+
+passport.deserializeUser(function(userId, done) {
+    User.findById(userId, done);
+
 passport.serializeUser(function(user, done){
   done(null, user.id);
 });
 
 passport.deserializeUser(function(userId, done){
   User.findById(userId, done);
+
 });
 
 var routes = require('./routes/index');
@@ -56,6 +64,7 @@ var auth = require('./routes/auth')
 
 
 var app = express();
+
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -65,6 +74,7 @@ app.set('view engine', 'pug');
 app.get('/preferences', (req, res) => {
     res.render('preferences');
   });
+
 
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({limit: '7mb', extended: false}));
@@ -83,6 +93,7 @@ var sessionOptions = {
 };
 
 app.use(session(sessionOptions))
+
 
 app.use(passport.initialize());
 
