@@ -12,6 +12,11 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const User = require("./models/user");
 const $ = require('jquery');
+var LocalStorage = require('node-localstorage').LocalStorage;
+if ( typeof localStorage === "undefined" || localStorage === null){
+  localStorage = new LocalStorage('./scratch');
+}
+
 
 passport.use(new SpotifyStrategy({
   clientID: process.env.SPOTIFY_CLIENT_ID,
