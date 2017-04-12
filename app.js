@@ -12,7 +12,7 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const User = require("./models/user");
 const $ = require('jquery');
-const = expressValidator = require('express-validator')
+const expressValidator = require('express-validator')
 
 passport.use(new SpotifyStrategy({
   clientID: process.env.SPOTIFY_CLIENT_ID,
@@ -59,7 +59,8 @@ app.set('view engine', 'pug');
 
 // rendering the preferences for users based on Mood
 app.get('/preferences', (req, res) => {
-    res.render('preferences');
+  res.render('preferences');
+});
 
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({limit: '7mb', extended: false}));
