@@ -20,13 +20,18 @@ $(document).ready(function() {
 });
 
 var checkForDoneness = function() {
+  var waits = 0;
   var isDone = setInterval(function() {
     $.ajax({
       url: '/playlist',
       method: 'GET',
       statusCode: {
         202: function(data, textStatus, xhr) {
+          if (waits >= 20) {
+            clearInterval(isDone);
+          }
           console.log('Waiting');
+          waits += 1;
         },
         200: function(data, textStatus, xhr) {
           clearInterval(isDone);
