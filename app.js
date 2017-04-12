@@ -1,4 +1,4 @@
-require('dotenv').config(); 
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
@@ -16,7 +16,7 @@ var LocalStorage = require('node-localstorage').LocalStorage;
 if ( typeof localStorage === "undefined" || localStorage === null){
   localStorage = new LocalStorage('./scratch');
 }
-const = expressValidator = require('express-validator')
+const expressValidator = require('express-validator')
 
 passport.use(new SpotifyStrategy({
   clientID: process.env.SPOTIFY_CLIENT_ID,
@@ -26,21 +26,21 @@ passport.use(new SpotifyStrategy({
   (console.log(accessToken))
   if (profile.emails) {
   User.findOneAndUpdate({
-    email: profile.emails[0].value, 
+    email: profile.emails[0].value,
   }, {
     name: profile.displayName,
     email: profile.emails[0].value ,
     username: profile.id,
-    accessToken: accessToken, 
+    accessToken: accessToken,
     preferences: []
   }, {
     upsert: true
-  }, 
+  },
   done);
   } else {
     var noEmailError = new Error("Your email privacy settings prevent you from signing into DJ Mood")
     done(noEmailError, null);
-  } 
+  }
 }));
 
 passport.serializeUser(function(user, done){
@@ -64,6 +64,7 @@ app.set('view engine', 'pug');
 // rendering the preferences for users based on Mood
 app.get('/preferences', (req, res) => {
     res.render('preferences');
+  });
 
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({limit: '7mb', extended: false}));
