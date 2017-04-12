@@ -6,7 +6,7 @@ const request = require('request');
 const spotify = require('../moodPlaylist');
 const passport = require('passport')
 const session = require('express-session')
-
+var User = require("../models/user");
 var kairosBaseCases = {
   happy: {
     joy: 100,
@@ -41,12 +41,19 @@ var kairosBaseCases = {
     fear: 0
   }
 }
+
 router.get('/', function(req, res) {
-  res.render('index', { title: 'Home', user: req.user });
+    res.render('index', {
+        title: 'Home',
+        user: req.user
+    });
 });
 
 router.get('/about', function(req, res) {
-  res.render('about', { title: 'About', user: req.user });
+    res.render('about', {
+        title: 'About',
+        user: req.user
+    });
 });
 
 router.get('/video', function(req, res) {
@@ -55,16 +62,33 @@ router.get('/video', function(req, res) {
 });
 
 router.get('/profile', function(req, res) {
-  if(req.user) {
-    res.render('profile', { title: 'Profile', user: req.user });
-  } else {
-    res.redirect('/login');
-  }
+    if (req.user) {
+        res.render('profile', {
+            title: 'Profile',
+            user: req.user
+        });
+    } else {
+        res.redirect('/login');
+    }
 });
 
 router.get('/login', function(req, res) {
-  res.render('login', { title: 'Log In', user: req.user });
+    res.render('login', {
+        title: 'Log In',
+        user: req.user
+    });
 });
+
+
+  router.post('/profile', (req, res) => {
+    console.log(req.user.email)
+    let preferences = (Object.values(req.body))
+    User.update({_id: req.user.id }, { $set: { preferences: preferences}}, function(req, res){
+      console.log(res)
+      console.log(req)
+    })
+    res.redirect('/profile')
+  })
 
 router.post('/videos', function(req, res, next) {
   let username = req.user.username;
@@ -162,3 +186,4 @@ function analyzeKairosOutput(emotionalJSON, req) {
 };
 
 module.exports = router;
+
