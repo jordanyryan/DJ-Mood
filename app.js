@@ -22,7 +22,7 @@ const expressValidator = require('express-validator')
 passport.use(new SpotifyStrategy({
   clientID: process.env.SPOTIFY_CLIENT_ID,
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-  callbackURL: "http://localhost:3000/auth/spotify/callback"
+  callbackURL: process.env.CALLBACK_URL
 }, function(accessToken, refreshToken, profile, done){
   (console.log(accessToken))
   if (profile.emails) {
