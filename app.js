@@ -16,6 +16,7 @@ var LocalStorage = require('node-localstorage').LocalStorage;
 if ( typeof localStorage === "undefined" || localStorage === null){
   localStorage = new LocalStorage('./scratch');
 }
+
 const expressValidator = require('express-validator')
 
 passport.use(new SpotifyStrategy({
@@ -72,9 +73,8 @@ app.set('view engine', 'pug');
 
 // rendering the preferences for users based on Mood
 app.get('/preferences', (req, res) => {
-    res.render('preferences');
-  });
-
+  res.render('preferences');
+});
 
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({limit: '7mb', extended: false}));

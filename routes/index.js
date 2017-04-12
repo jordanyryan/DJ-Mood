@@ -62,35 +62,39 @@ router.get('/video', function(req, res) {
 });
 
 router.get('/profile', function(req, res) {
-    if (req.user) {
-        res.render('profile', {
-            title: 'Profile',
-            user: req.user
-        });
-    } else {
-        res.redirect('/login');
-    }
+  if (req.user) {
+    res.render('profile', {
+      title: 'Profile',
+      user: req.user
+    });
+  } else {
+    res.redirect('/login');
+  }
 });
 
 router.get('/login', function(req, res) {
-    res.render('login', {
-        title: 'Log In',
-        user: req.user
-    });
+  res.render('login', {
+    title: 'Log In',
+    user: req.user
+  });
 });
 
-
-  router.post('/profile', (req, res) => {
-    console.log(req.user.email)
-    let preferences = (Object.values(req.body))
-    User.update({_id: req.user.id }, { $set: { preferences: preferences}}, function(req, res){
-      console.log(res)
-      console.log(req)
-    })
-    res.redirect('/profile')
+router.post('/profile', (req, res) => {
+  console.log(req.user.email)
+  console.log(req.body);
+  var preferences = Object.keys(req.body).map(function(k) {
+    return(req.body[k]);
+  });
+  console.log(preferences);
+  User.update({_id: req.user.id }, { $set: { preferences: preferences}}, function(req, res) {
+    console.log(res)
+    console.log(req)
   })
+  res.redirect('/profile')
+})
 
 router.post('/videos', function(req, res, next) {
+  let finalResponse = res;
   let username = req.user.username;
   let playlist = null;
   request.post({
@@ -103,7 +107,7 @@ router.post('/videos', function(req, res, next) {
     var idJSON = JSON.parse(res.body);
     console.log('Giving Kairos some time to analyze the results...');
     setTimeout(function() {
-      req.playlist = pingUntilAnalyzed(idJSON.id, req)
+      pingUntilAnalyzed(idJSON.id, req, res)
     }, 5000);
   });
 });
@@ -182,7 +186,31 @@ function analyzeKairosOutput(emotionalJSON, req) {
       matchingState = baseStates[i]
     }
   }
-  return spotify.runner([matchingState, req]);
+  // 0: Happy
+  // 1: Sad
+  // 2: Angry
+  // 3: Relaxed
+  // 4: Chill
+  console.log(matchingState);
+  switch(matchingState) {
+    case 'happy': 
+      var preferenceState = req.user.preferences[0]
+      break;
+    case 'sad':
+      var preferenceState = req.user.preferences[1]
+      break;
+    case 'angry':
+      var preferenceState = req.user.preferences[2]
+      break;
+    case 'relaxed':
+      var preferenceState = req.user.preferences[3]
+      break;
+    case 'chill':
+      var preferenceState = req.user.preferences[4]
+      break;
+  };
+  console.log(preferenceState);
+  spotify.runner([preferenceState, req]);
 };
 
 module.exports = router;
