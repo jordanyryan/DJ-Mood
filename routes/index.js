@@ -1,47 +1,47 @@
-var express = require('express');
-var router = express.Router();
-var fs = require('fs');
-var $ = require('jquery');
-var request = require('request');
-var spotify = require('../moodPlaylist');
+const express = require('express');
+const router = express.Router();
+const fs = require('fs');
+const $ = require('jquery');
+const request = require('request');
+const spotify = require('../moodPlaylist');
+const passport = require('passport')
+const session = require('express-session')
 var User = require("../models/user");
-
 var kairosBaseCases = {
-    happy: {
-        joy: 100,
-        surprise: 0,
-        sadness: 0,
-        anger: 0,
-        disgust: 0,
-        fear: 0
-    },
-    sad: {
-        joy: 0,
-        surprise: 0,
-        sadness: 100,
-        anger: 0,
-        disgust: 0,
-        fear: 0
-    },
-    angry: {
-        joy: 0,
-        surprise: 0,
-        sadness: 0,
-        anger: 100,
-        disgust: 0,
-        fear: 0
-    },
-    bored: {
-        joy: 0,
-        surprise: 0,
-        sadness: 0,
-        anger: 0,
-        disgust: 0,
-        fear: 0
-    }
+  happy: {
+    joy: 100,
+    surprise: 0,
+    sadness: 0,
+    anger: 0,
+    disgust: 0,
+    fear: 0
+  },
+  sad: {
+    joy: 0,
+    surprise: 0,
+    sadness: 100,
+    anger: 0,
+    disgust: 0,
+    fear: 0
+  },
+  angry: {
+    joy: 0,
+    surprise: 0,
+    sadness: 0,
+    anger: 100,
+    disgust: 0,
+    fear: 0
+  },
+  chill: {
+    joy: 0,
+    surprise: 0,
+    sadness: 0,
+    anger: 0,
+    disgust: 0,
+    fear: 0
+  }
 }
 
-/* GET home page */
 router.get('/', function(req, res) {
     res.render('index', {
         title: 'Home',
@@ -49,7 +49,6 @@ router.get('/', function(req, res) {
     });
 });
 
-/* GET about page */
 router.get('/about', function(req, res) {
     res.render('about', {
         title: 'About',
@@ -57,15 +56,11 @@ router.get('/about', function(req, res) {
     });
 });
 
-/* GET video page */
 router.get('/video', function(req, res) {
-    res.render('video', {
-        title: 'Mood Playlist',
-        user: req.user
-    });
+  let url = `https://embed.spotify.com/?uri=spotify%3Auser%3A${req.user.username}%3Aplaylist%3A${localStorage.getItem("playlistID")}`
+  res.render('video', { title: 'Mood Playlist', url: url, user: req.user });
 });
 
-/* GET profile page */
 router.get('/profile', function(req, res) {
     if (req.user) {
         res.render('profile', {
@@ -77,7 +72,6 @@ router.get('/profile', function(req, res) {
     }
 });
 
-/* GET login page */
 router.get('/login', function(req, res) {
     res.render('login', {
         title: 'Log In',
@@ -85,7 +79,8 @@ router.get('/login', function(req, res) {
     });
 });
 
-router.post('/profile', (req, res) => {
+
+  router.post('/profile', (req, res) => {
     console.log(req.user.email)
     let preferences = (Object.values(req.body))
     User.update({_id: req.user.id }, { $set: { preferences: preferences}}, function(req, res){
@@ -95,63 +90,100 @@ router.post('/profile', (req, res) => {
     res.redirect('/profile')
   })
 
+router.post('/videos', function(req, res, next) {
+  let username = req.user.username;
+  let playlist = null;
+  request.post({
+    url: ('https://api.kairos.com/v2/media?source=' + req.body.flv),
+    headers: {
+      app_id: process.env.KAIROS_APP_ID,
+      app_key: process.env.KAIROS_APP_KEY
+    }
+  }, function(err, res) {
+    var idJSON = JSON.parse(res.body);
+    console.log('Giving Kairos some time to analyze the results...');
+    setTimeout(function() {
+      req.playlist = pingUntilAnalyzed(idJSON.id, req)
+    }, 5000);
+  });
+});
 
-    router.post('/videos', function(req, res, next) {
-        let username = req.user.username;
-        request.post({
-            url: ('https://api.kairos.com/v2/media?source=' + req.body.flv),
-            headers: {
-                app_id: '6d32c141',
-                app_key: '6db3ff0a241edbbe3d2b4f2943fb330e'
-            }
-        }, function(err, res) {
-            var idJSON = JSON.parse(res.body);
-            console.log('Giving Kairos some time to analyze the results...');
-            setTimeout(function() {
-                request.get({
-                    url: ('https://api.kairos.com/v2/analytics/' + idJSON.id),
-                    headers: {
-                        app_id: '6d32c141',
-                        app_key: '6db3ff0a241edbbe3d2b4f2943fb330e'
-                    }
-                }, function(err, res) {
+function pingUntilAnalyzed(id, req) {
+  request.get({
+    url: ('https://api.kairos.com/v2/analytics/' + id),
+    headers: {
+      app_id: process.env.KAIROS_APP_ID,
+      app_key: process.env.KAIROS_APP_KEY
+    }
+  }, function(err, res) {
+    var responseJSON = JSON.parse(res.body)
+    if (responseJSON.impressions) {
+      return averageEmotions(responseJSON, req);
+    } else {
+      console.log("Analyzing...")
+      setTimeout(function() {
+        pingUntilAnalyzed(id, req);
+      }, 3000);
+    };
+  })
+};
 
-                    var emotionalJSON = JSON.parse(res.body);
-                    console.log(emotionalJSON.impressions);
-                    var userState = emotionalJSON.impressions[0].average_emotion
-                    console.log('Your emotions (this will be compared to our baselines):', userState);
-                    var baseStates = Object.keys(kairosBaseCases);
-                    console.log('Comparing to:', baseStates);
-                    var bestMatch = 999999999;
-                    var newMatch = 0;
-                    for (var i = 0; i < baseStates.length; i++) {
-                        var baseState = kairosBaseCases[baseStates[i]];
-                        var squaredDiffs = []
-                        for (var j = 0; j < 6; j++) {
-                            squaredDiffs.push((userState.joy - baseState.joy) * (userState.joy - baseState.joy));
-                            squaredDiffs.push((userState.surprise - baseState.surprise) * (userState.surprise - baseState.surprise));
-                            squaredDiffs.push((userState.anger - baseState.anger) * (userState.anger - baseState.anger));
-                            squaredDiffs.push((userState.disgust - baseState.disgust) * (userState.disgust - baseState.disgust));
-                            squaredDiffs.push((userState.fear - baseState.fear) * (userState.fear - baseState.fear));
-                            squaredDiffs.push((userState.sadness - baseState.sadness) * (userState.sadness - baseState.sadness));
-                        }
-                        var sumOfSquaredDiffs = squaredDiffs.reduce(function(acc, val) {
-                            return (acc + val);
-                        }, 0);
-                        newMatch = Math.sqrt(sumOfSquaredDiffs);
-                        if (newMatch < bestMatch) {
-                            bestMatch = newMatch;
-                            matchingState = baseStates[i]
-                        }
-                    }
-                    spotify.runner(matchingState);
-                    // here we parse the emotions JSON and return one word emotional state
-                    // pass this word to preferences, get back another word of what kind of music to play
-                    // pass THAT word to playlist maker to compose playlist
-                    // pass playlist URI to front end and update the player.
-                });
-            }, 25000);
-        });
-    });
+function averageEmotions(emotionalJSON, req) {
+  var impressions = emotionalJSON.impressions.map(function(impression) {
+    return(impression.average_emotion);
+  });
+  var sumOfSadness = impressions.reduce(function(acc, impression) {
+    return(acc + impression.sadness);
+  }, 0);
+  var sumOfJoy = impressions.reduce(function(acc, impression) {
+    return(acc + impression.joy);
+  }, 0);
+  var sumOfAnger = impressions.reduce(function(acc, impression) {
+    return(acc + impression.anger);
+  }, 0);
+  var sumOfSurprise = impressions.reduce(function(acc, impression) {
+    return(acc + impression.surprise);
+  }, 0);
+  var sumOfDisgust = impressions.reduce(function(acc, impression) {
+    return(acc + impression.disgust);
+  }, 0);
+  var sumOfFear = impressions.reduce(function(acc, impression) {
+    return(acc + impression.fear);
+  }, 0);
+  var averageEmotions = {};
+  averageEmotions.sadness = sumOfSadness / impressions.length;
+  averageEmotions.joy = sumOfJoy / impressions.length;
+  averageEmotions.anger = sumOfAnger / impressions.length;
+  averageEmotions.disgust = sumOfDisgust / impressions.length;
+  averageEmotions.fear = sumOfFear / impressions.length;
+  averageEmotions.surprise = sumOfSurprise / impressions.length;
+  return analyzeKairosOutput(averageEmotions, req)
+}
 
-    module.exports = router;
+function analyzeKairosOutput(emotionalJSON, req) {
+  var baseStates = Object.keys(kairosBaseCases);
+  var bestMatch = 999999999;
+  var newMatch = 0;
+  for (var i = 0; i < baseStates.length; i++) {
+    var baseState = kairosBaseCases[baseStates[i]];
+    var squaredDiffs = []
+    squaredDiffs.push((emotionalJSON.joy - baseState.joy) * (emotionalJSON.joy - baseState.joy));
+    squaredDiffs.push((emotionalJSON.surprise - baseState.surprise) * (emotionalJSON.surprise - baseState.surprise));
+    squaredDiffs.push((emotionalJSON.anger - baseState.anger) * (emotionalJSON.anger - baseState.anger));
+    squaredDiffs.push((emotionalJSON.disgust - baseState.disgust) * (emotionalJSON.disgust - baseState.disgust));
+    squaredDiffs.push((emotionalJSON.fear - baseState.fear) * (emotionalJSON.fear - baseState.fear));
+    squaredDiffs.push((emotionalJSON.sadness - baseState.sadness) * (emotionalJSON.sadness - baseState.sadness));
+    var sumOfSquaredDiffs = squaredDiffs.reduce(function(acc, val) {
+      return(acc + val);
+    }, 0);
+    newMatch = Math.sqrt(sumOfSquaredDiffs);
+    if (newMatch < bestMatch) {
+      bestMatch = newMatch;
+      matchingState = baseStates[i]
+    }
+  }
+  return spotify.runner([matchingState, req]);
+};
+
+module.exports = router;
+

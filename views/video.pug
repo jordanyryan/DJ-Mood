@@ -3,13 +3,16 @@ extends layout
 block content
   .main.container
     .row
-      .col-md-6
+      #webcam-container.col-md-6
         h1.display-4.m-b-2.generate Generate a playlist based on your mood
         #webcam(class='col-md-6')
           video#mirror(autoplay='true')
       .col-md-2 
       .col-md-3
         #player.text-center
-          iframe(src='https://embed.spotify.com/?uri=spotify%3Aalbum%3A4ycNE7y1rp5215g1kkqk1P', width='400', height='600', frameborder='0', allowtransparency='true')
+          iframe(src=url, width='400', height='600', frameborder='0', allowtransparency='true')
+
+
+    
 
 
