@@ -19,7 +19,7 @@ let getRandomSubarray = function(arr, size) {
 
 let getTracks = function(req, callback){
   request({
-    url: `http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=${ req[0] }&api_key=${process.env.LASTFMKEY}&format=json&limit=300`,
+    url: `http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=${ req[0] }&api_key=${process.env.LASTFMKEY}&format=json&limit=200`,
     headers: {
       'User-Agent': userAgent
     },
