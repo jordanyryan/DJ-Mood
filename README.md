@@ -14,8 +14,6 @@ While there are only a few basic emotional states defined at the moment, this ap
 
 ## MUSIC
 
-All music returned by this is sourced from Spotify, and the app requires a Spotify account to use.  The playlist algorithm picks music based on
-
-# STUFF ABOUT THE MUSIC ALGORITHM HERE
+The music for our response playlists is found via a lastFM tag
 
 Once the tracks have been picked, the app compiles them into a playlist on the users Spotify profile, and shows that playlist in an embedded player on the page.

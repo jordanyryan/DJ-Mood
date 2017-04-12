@@ -11,9 +11,13 @@ $(document).ready(function() {
     complete: function(outputs){
       $("#recorder0").remove();
       $("#webcam-container").append("<h3 id='alert'>Please wait while we analyze your video.<h3>")
-      $.post('/videos', outputs, function(response) {
-        // doesnt get called
-      });
+      $.ajax({
+        url: '/videos',
+        method: 'POST',
+        data: outputs
+      }).always(function() {
+        // don't do anything
+      })
       checkForDoneness();
     }
   });
@@ -36,8 +40,8 @@ var checkForDoneness = function() {
         },
         200: function(data, textStatus, xhr) {
           clearInterval(isDone);
-          $("#alert").text('Your playlist:');
-          $('iframe').attr('src', data);
+          $("#alert").text('Your playlist type: ' + data.type);
+          $('iframe').attr('src', data.url);
         }
       }
     });

@@ -53,10 +53,12 @@ var kairosBaseCases = {
 router.get('/playlist', function(req, res) {
   if (!localStorage.getItem('playlistID')) {
     res.status(202).send();
-    console.log('not done yet')
   } else {
     let url = `https://embed.spotify.com/?uri=spotify%3Auser%3A${req.user.username}%3Aplaylist%3A${localStorage.getItem("playlistID")}`
-    res.send(url);
+    res.send({
+      url: url,
+      type: localStorage.getItem('preferenceState')
+    });
   }
 });
 
@@ -107,8 +109,6 @@ router.post('/profile', (req, res) => {
       return(req.body[k]);
     });
     User.update({_id: req.user.id }, { $set: { preferences: preferences}}, function(req, res) {
-      console.log(res)
-      console.log(req)
     })
     res.redirect('/profile')
   } else {
@@ -234,7 +234,7 @@ function analyzeKairosOutput(emotionalJSON, req) {
       var preferenceState = req.user.preferences[4]
       break;
   };
-  console.log(preferenceState);
+  localStorage.setItem('preferenceState', preferenceState)
   spotify.runner([preferenceState, req]);
 };
 
