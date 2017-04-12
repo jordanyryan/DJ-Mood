@@ -9,7 +9,7 @@ const session = require('express-session')
 var User = require("../models/user");
 var kairosBaseCases = {
   happy: {
-    joy: 100,
+    joy: 50,
     surprise: 0,
     sadness: 0,
     anger: 0,
@@ -19,7 +19,7 @@ var kairosBaseCases = {
   sad: {
     joy: 0,
     surprise: 0,
-    sadness: 100,
+    sadness: 50,
     anger: 0,
     disgust: 0,
     fear: 0
@@ -28,7 +28,7 @@ var kairosBaseCases = {
     joy: 0,
     surprise: 0,
     sadness: 0,
-    anger: 100,
+    anger: 50,
     disgust: 0,
     fear: 0
   },
@@ -39,6 +39,14 @@ var kairosBaseCases = {
     anger: 0,
     disgust: 0,
     fear: 0
+  },
+  stressed: {
+    joy: 0,
+    surprise: 0,
+    sadness: 10,
+    anger: 10,
+    disgust: 10,
+    fear: 10
   }
 }
 
@@ -67,8 +75,12 @@ router.get('/about', function(req, res) {
 });
 
 router.get('/video', function(req, res) {
-  let url = `https://embed.spotify.com/?uri=spotify%3Auser%3A${req.user.username}%3Aplaylist%3A${localStorage.getItem("playlistID")}`
-  res.render('video', { title: 'Mood Playlist', url: url, user: req.user });
+  if (req.user) {
+    let url = `https://embed.spotify.com/?uri=spotify%3Auser%3A${req.user.username}%3Aplaylist%3A${localStorage.getItem("playlistID")}`
+    res.render('video', { title: 'Mood Playlist', url: url, user: req.user });
+  } else {
+    res.redirect('/login');
+  }
 });
 
 router.get('/profile', function(req, res) {
@@ -90,35 +102,40 @@ router.get('/login', function(req, res) {
 });
 
 router.post('/profile', (req, res) => {
-  console.log(req.user.email)
-  console.log(req.body);
-  var preferences = Object.keys(req.body).map(function(k) {
-    return(req.body[k]);
-  });
-  console.log(preferences);
-  User.update({_id: req.user.id }, { $set: { preferences: preferences}}, function(req, res) {
-    console.log(res)
-    console.log(req)
-  })
-  res.redirect('/profile')
+  if (req.user) {
+    var preferences = Object.keys(req.body).map(function(k) {
+      return(req.body[k]);
+    });
+    User.update({_id: req.user.id }, { $set: { preferences: preferences}}, function(req, res) {
+      console.log(res)
+      console.log(req)
+    })
+    res.redirect('/profile')
+  } else {
+    res.redirect('/login');
+  }
 })
 
 router.post('/videos', function(req, res, next) {
-  localStorage.removeItem('playlistID');
-  let username = req.user.username;
-  request.post({
-    url: ('https://api.kairos.com/v2/media?source=' + req.body.flv),
-    headers: {
-      app_id: process.env.KAIROS_APP_ID,
-      app_key: process.env.KAIROS_APP_KEY
-    }
-  }, function(err, res) {
-    var idJSON = JSON.parse(res.body);
-    console.log('Giving Kairos some time to analyze the results...');
-    setTimeout(function() {
-      pingUntilAnalyzed(idJSON.id, req, res)
-    }, 5000);
-  });
+  if (req.user) {
+    localStorage.removeItem('playlistID');
+    let username = req.user.username;
+    request.post({
+      url: ('https://api.kairos.com/v2/media?source=' + req.body.flv),
+      headers: {
+        app_id: process.env.KAIROS_APP_ID,
+        app_key: process.env.KAIROS_APP_KEY
+      }
+    }, function(err, res) {
+      var idJSON = JSON.parse(res.body);
+      console.log('Giving Kairos some time to analyze the results...');
+      setTimeout(function() {
+        pingUntilAnalyzed(idJSON.id, req, res)
+      }, 5000);
+    });
+  } else {
+    res.redirect('/login');
+  }
 });
 
 function pingUntilAnalyzed(id, req) {
@@ -200,7 +217,6 @@ function analyzeKairosOutput(emotionalJSON, req) {
   // 2: Angry
   // 3: Relaxed
   // 4: Chill
-  console.log(matchingState);
   switch(matchingState) {
     case 'happy': 
       var preferenceState = req.user.preferences[0]

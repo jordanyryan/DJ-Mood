@@ -29,6 +29,7 @@ var checkForDoneness = function() {
         202: function(data, textStatus, xhr) {
           if (waits >= 20) {
             clearInterval(isDone);
+            $('#alert').text('Something went wrong behind the scenes.  Please try again.')
           }
           console.log('Waiting');
           waits += 1;
