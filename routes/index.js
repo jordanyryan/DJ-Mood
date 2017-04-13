@@ -51,13 +51,13 @@ var kairosBaseCases = {
 }
 
 router.get('/playlist', function(req, res) {
-  if (req.user.playlist.length < 2) {
+  if (!req.user.playlist) {
     res.status(202).send();
   } else {
-    let url = `https://embed.spotify.com/?uri=spotify%3Auser%3A${req.user.username}%3Aplaylist%3A${req.user.playlist[1]}`
+    let url = `https://embed.spotify.com/?uri=spotify%3Auser%3A${req.user.username}%3Aplaylist%3A${req.user.playlist}`
     res.send({
       url: url,
-      type: req.user.playlist[0]
+      type: req.user.playlistType
     });
   }
 });
@@ -78,8 +78,8 @@ router.get('/about', function(req, res) {
 
 router.get('/video', function(req, res) {
   if (req.user) {
-    if (req.user.playlist[1] != null) {
-      var url = `https://embed.spotify.com/?uri=spotify%3Auser%3A${req.user.username}%3Aplaylist%3A${req.user.playlist[0]}`
+    if (req.user.playlist != null ) {
+      var url = `https://embed.spotify.com/?uri=spotify%3Auser%3A${req.user.username}%3Aplaylist%3A${req.user.playlist}`
     } else {
       var url = `https://embed.spotify.com/?uri=spotify%3Auser%3Aspotify%3Aplaylist%3A37i9dQZF1DWYBO1MoTDhZI`
     };
@@ -135,7 +135,7 @@ router.post('/profile', (req, res) => {
 
 router.post('/videos', function(req, res, next) {
   if (req.user) {
-    User.update({_id: req.user.id }, { $set: { playlist: [] }}, function(req, res) {
+    User.update({_id: req.user.id }, { $set: { playlist: null }}, function(req, res) {
     })
     let username = req.user.username;
     request.post({
@@ -252,7 +252,7 @@ function analyzeKairosOutput(emotionalJSON, req) {
       var preferenceState = req.user.preferences[4]
       break;
   };
-  User.update({_id: req.user.id }, { $set: { playlist: [preferenceState] }}, function(req, res) {
+  User.update({_id: req.user.id }, { $set: { playlistType: preferenceState }}, function(req, res) {
   });
   spotify.runner([preferenceState, req]);
 };

@@ -91,7 +91,7 @@ let createPlaylist = function(req, trackUri , callback){
   },
   function(error, response, body){
     let playlist = JSON.parse(body).id
-    User.update({_id: req[1].user.id }, { $set: { playlist: [req[1].user.playlist, playlist]}}, function(req, res) {
+    User.update({_id: req[1].user.id }, { $set: { playlist: playlist}}, function(req, res) {
     })
     callback(playlist)
   });
