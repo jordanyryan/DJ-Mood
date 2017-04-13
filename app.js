@@ -63,10 +63,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 
-// rendering the preferences for users based on Mood
-app.get('/preferences', (req, res) => {
-  res.render('preferences');
-});
 
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({limit: '7mb', extended: false}));

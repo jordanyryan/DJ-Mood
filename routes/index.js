@@ -103,6 +103,19 @@ router.get('/login', function(req, res) {
   });
 });
 
+
+// rendering the preferences for users based on Mood
+router.get('/preferences', (req, res) => {
+  if (req.user) {
+    res.render('preferences', {
+      title: 'Preferences',
+      user: req.user
+    })
+  } else {
+    res.redirect('/login')
+  }
+});
+
 router.post('/profile', (req, res) => {
   if (req.user) {
     var preferences = Object.keys(req.body).map(function(k) {
