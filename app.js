@@ -22,7 +22,7 @@ const expressValidator = require('express-validator')
 passport.use(new SpotifyStrategy({
   clientID: process.env.SPOTIFY_CLIENT_ID,
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-  callbackURL: "http://localhost:3000/auth/spotify/callback"
+  callbackURL: process.env.CALLBACK_URL
 }, function(accessToken, refreshToken, profile, done){
 
   if (profile.emails) {
@@ -34,9 +34,9 @@ passport.use(new SpotifyStrategy({
     email: profile.emails[0].value ,
     username: profile.id,
     accessToken: accessToken,
-    preferences: [],
+    preferences: ['happy', 'sad', 'angry', 'relaxed', 'chill'],
     photo: profile.photos[0]
-    
+
   }, {
     upsert: true
   },
@@ -66,10 +66,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 
-// rendering the preferences for users based on Mood
-app.get('/preferences', (req, res) => {
-  res.render('preferences');
-});
 
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({limit: '7mb', extended: false}));
