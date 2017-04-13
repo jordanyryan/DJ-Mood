@@ -69,6 +69,7 @@ let getIds = function(tracks, req, callback){
     }).then(null, function(error){
       j++
       console.log(error)
+      return
     })
   })
 };

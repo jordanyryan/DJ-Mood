@@ -3,20 +3,46 @@ extends layout
 block content
   .main.container.clearfix
     .row
-      .col-md-10
-      if(user)
-      h1.display-4 Welcome!
-        h1.display-4
-          img.avatar.img-circle.hidden-xs-down(src=user.photo alt='avatar')
-          | Username: #{user.username}
-          br
-          | Email: #{user.email}
-      hr
+      div.col-span-4
+        if(!user.photo)
+        else
+          img.avatar.img-circle.col-span-2.col-md-offset-2(src=user.photo alt='avatar')
+        end
+        span.display-4 #{user.username}
+
+    br
+    .row
+      div.col-md-2
       div.container.preferences
-        p When Happy, your Music Choice is: #{user.preferences[0]}
-        p When Sad, your Music Choice is: #{user.preferences[1]}
-        p When Angry, your Music Choice is: #{user.preferences[2]}
-        p When Relaxed, your Music Choice is: #{user.preferences[3]}
-        p When Chilled, your Music Choice is: #{user.preferences[4]}
-        h4
+        div.col-md-5
+          h6 When Happy, your Music Choice is: #{user.preferences[0]}
+          h6 When Sad, your Music Choice is: #{user.preferences[1]}
+          h6 When Angry, your Music Choice is: #{user.preferences[2]}
+          h6 When Relaxed, your Music Choice is: #{user.preferences[3]}
+          h6 When Chilled, your Music Choice is: #{user.preferences[4]}
+          h6
             a(href='/preferences') Click to Edit Preferences
+
+    //-   div.col-md-6.center
+    //-     p.display-6
+    //-       | #{user.username}
+    //-   div.col-md-6.center
+    //-     p.display-6
+    //-       | #{user.email}
+
+    //- .row
+    //-   .col-md-10
+    //-   if(user)
+    //-   h1.display-4 Welcome!
+    //-     h1.display-4
+    //-       | Username: 
+    //-       br
+    //-   hr
+    //-   div.container.preferences
+    //-     p When Happy, your Music Choice is: #{user.preferences[0]}
+    //-     p When Sad, your Music Choice is: #{user.preferences[1]}
+    //-     p When Angry, your Music Choice is: #{user.preferences[2]}
+    //-     p When Relaxed, your Music Choice is: #{user.preferences[3]}
+    //-     p When Chilled, your Music Choice is: #{user.preferences[4]}
+    //-     h4
+    //-         a(href='/preferences') Click to Edit Preferences

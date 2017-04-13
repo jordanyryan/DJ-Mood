@@ -77,3 +77,14 @@
   font-family: "Lato";
   text-shadow: 2px 2px #454545	
 }
+
+.img-circle{
+  width: 10%;
+  height: auto;
+  border: 1px;
+  box-shadow: 0px 0px 0px 3px rgba(0,0,0,0.3);   
+}
+
+.float-left:hover, .float-left:active, .float-left:focus{
+  background-color: #84bd00;
+}

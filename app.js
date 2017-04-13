@@ -24,8 +24,9 @@ passport.use(new SpotifyStrategy({
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
   callbackURL: process.env.CALLBACK_URL
 }, function(accessToken, refreshToken, profile, done){
-  (console.log(accessToken))
+
   if (profile.emails) {
+
   User.findOneAndUpdate({
     email: profile.emails[0].value,
   }, {
@@ -33,7 +34,9 @@ passport.use(new SpotifyStrategy({
     email: profile.emails[0].value ,
     username: profile.id,
     accessToken: accessToken,
-    preferences: ['happy', 'sad', 'angry', 'relaxed', 'chill']
+    preferences: ['happy', 'sad', 'angry', 'relaxed', 'chill'],
+    photo: profile.photos[0]
+
   }, {
     upsert: true
   },

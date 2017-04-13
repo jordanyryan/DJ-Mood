@@ -29,7 +29,10 @@ var UserSchema = new mongoose.Schema({
     required: true,
     trim: true,
     unique: true
-
+  },
+  photo: {
+    type: String,
+    trim: true,
   }
 });
 
