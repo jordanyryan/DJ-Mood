@@ -33,7 +33,11 @@ var UserSchema = new mongoose.Schema({
   photo: {
     type: String,
     trim: true,
-  }
+  },
+  playlist: {
+    type: Array,
+    trim: true
+  },
 });
 
 
