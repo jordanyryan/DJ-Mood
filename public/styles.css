@@ -213,3 +213,7 @@ a:hover {
 a{
   color: #84bd00;
 }
+
+a.bigger-text {
+  font-size: 2em;
+}
