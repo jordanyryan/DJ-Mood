@@ -78,7 +78,11 @@ router.get('/about', function(req, res) {
 
 router.get('/video', function(req, res) {
   if (req.user) {
-    let url = `https://embed.spotify.com/?uri=spotify%3Auser%3A${req.user.username}%3Aplaylist%3A${localStorage.getItem("playlistID")}`
+    if (localStorage.getItem('playlistID')) {
+      var url = `https://embed.spotify.com/?uri=spotify%3Auser%3A${req.user.username}%3Aplaylist%3A${localStorage.getItem("playlistID")}`
+    } else {
+      var url = `https://embed.spotify.com/?uri=spotify%3Auser%3Aspotify%3Aplaylist%3A37i9dQZF1DWYBO1MoTDhZI`
+    };
     res.render('video', { title: 'Mood Playlist', url: url, user: req.user });
   } else {
     res.redirect('/login');

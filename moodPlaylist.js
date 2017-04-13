@@ -106,7 +106,6 @@ let addTracks = function(req, tracks, playlist, callback){
       'Content-Type': 'application/json'
     }
   }).then(function(json){
-    console.log("finished")
     return playlist
   })
 }
