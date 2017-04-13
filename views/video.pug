@@ -7,10 +7,15 @@ block content
         h1.display-4.m-b-2.generate Generate a playlist based on your mood
         #webcam(class='col-md-6')
           video#mirror(autoplay='true')
+      
       .col-md-2 
       .col-md-3
         #player.text-center
           iframe(src=url, width='400', height='600', frameborder='0', allowtransparency='true')
+
+    .row
+      div.col-md-6.try
+        a.bigger-text(href="/video") Try again
 
 
     
