@@ -40,6 +40,9 @@ let getIds = function(tracks, req, callback){
   let j = 0;
   tracks.forEach( (track) => {
     let title = removeDiacritics(track["name"].match(/^[^\(]+/g)[0].trim());
+    if (title.includes("Undefined") || title.includes("_") ) {
+      return
+    }
     let titleJoined = title.split(" ").join("+");
     let artist = track["artist"]["name"];
     console.log(track["name"], title, titleJoined)
