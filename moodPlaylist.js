@@ -72,7 +72,6 @@ let getIds = function(tracks, req, callback){
 };
 
 let createPlaylist = function(req, trackUri , callback){
-  console.log(trackUri)
   request({
     method: 'POST',
     url: `https://api.spotify.com/v1/users/${req[1].user.username}/playlists`,
@@ -104,7 +103,6 @@ let addTracks = function(req, tracks, playlist, callback){
       'Content-Type': 'application/json'
     }
   }).then(function(json){
-    console.log("finished")
     return playlist
   })
 }
