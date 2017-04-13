@@ -35,9 +35,13 @@ var UserSchema = new mongoose.Schema({
     trim: true,
   },
   playlist: {
-    type: Array,
+    type: String,
     trim: true
   },
+  playlistType: {
+    type: String,
+    trim: true
+  }
 });
 
 
