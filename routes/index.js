@@ -51,13 +51,13 @@ var kairosBaseCases = {
 }
 
 router.get('/playlist', function(req, res) {
-  if (!localStorage.getItem('playlistID')) {
+  if (req.user.playlist.length < 2) {
     res.status(202).send();
   } else {
-    let url = `https://embed.spotify.com/?uri=spotify%3Auser%3A${req.user.username}%3Aplaylist%3A${localStorage.getItem("playlistID")}`
+    let url = `https://embed.spotify.com/?uri=spotify%3Auser%3A${req.user.username}%3Aplaylist%3A${req.user.playlist[1]}`
     res.send({
       url: url,
-      type: localStorage.getItem('preferenceState')
+      type: req.user.playlist[0]
     });
   }
 });
@@ -78,12 +78,12 @@ router.get('/about', function(req, res) {
 
 router.get('/video', function(req, res) {
   if (req.user) {
-    if (localStorage.getItem('playlistID')) {
-      var url = `https://embed.spotify.com/?uri=spotify%3Auser%3A${req.user.username}%3Aplaylist%3A${localStorage.getItem("playlistID")}`
+    if (req.user.playlist[1] != null) {
+      var url = `https://embed.spotify.com/?uri=spotify%3Auser%3A${req.user.username}%3Aplaylist%3A${req.user.playlist[0]}`
     } else {
       var url = `https://embed.spotify.com/?uri=spotify%3Auser%3Aspotify%3Aplaylist%3A37i9dQZF1DWYBO1MoTDhZI`
     };
-    res.render('video', { title: 'Mood Playlist', url: url, user: req.user });
+    res.render('video', { title: 'Mood Playlist', url: url, user: req.user});
   } else {
     res.redirect('/login');
   }
@@ -135,7 +135,8 @@ router.post('/profile', (req, res) => {
 
 router.post('/videos', function(req, res, next) {
   if (req.user) {
-    localStorage.removeItem('playlistID');
+    User.update({_id: req.user.id }, { $set: { playlist: [] }}, function(req, res) {
+    })
     let username = req.user.username;
     request.post({
       url: ('https://api.kairos.com/v2/media?source=' + req.body.flv),
@@ -251,7 +252,8 @@ function analyzeKairosOutput(emotionalJSON, req) {
       var preferenceState = req.user.preferences[4]
       break;
   };
-  localStorage.setItem('preferenceState', preferenceState)
+  User.update({_id: req.user.id }, { $set: { playlist: [preferenceState] }}, function(req, res) {
+  });
   spotify.runner([preferenceState, req]);
 };
 
