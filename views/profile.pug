@@ -3,22 +3,24 @@ extends layout
 block content
   .main.container.clearfix
     .row
+      div.col-span-4
+        if(!user.photo)
+        else
+          img.avatar.img-circle.col-span-2.col-md-offset-2(src=user.photo alt='avatar')
+        end
+        span.display-4 #{user.username}
 
-      img.avatar.img-circle.col-span-2.col-md-offset-6.hidden-md-down(src=user.photo alt='avatar')
-    br
-    br
     br
     .row
       div.col-md-2
-        h5.display-6.text-center #{user.username}
       div.container.preferences
         div.col-md-5
-          h5 When Happy, your Music Choice is: #{user.preferences[0]}
-          h5 When Sad, your Music Choice is: #{user.preferences[1]}
-          h5 When Angry, your Music Choice is: #{user.preferences[2]}
-          h5 When Relaxed, your Music Choice is: #{user.preferences[3]}
-          h5 When Chilled, your Music Choice is: #{user.preferences[4]}
-          h5
+          h6 When Happy, your Music Choice is: #{user.preferences[0]}
+          h6 When Sad, your Music Choice is: #{user.preferences[1]}
+          h6 When Angry, your Music Choice is: #{user.preferences[2]}
+          h6 When Relaxed, your Music Choice is: #{user.preferences[3]}
+          h6 When Chilled, your Music Choice is: #{user.preferences[4]}
+          h6
             a(href='/preferences') Click to Edit Preferences
 
     //-   div.col-md-6.center
