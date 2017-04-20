@@ -2,6 +2,11 @@
 
 DJ MOOD is an application that takes a short, 3-second video of the user's face, analyzes the emotions it is displaying, and uses those emotions to generate a playlist from Spotify.
 
+## Link
+
+http://dj-mood.herokuapp.com/
+Click playlist to get started
+
 ## EMOTIONS
 
 We are using the Kairos Facial Recognition API to analyze the videos.  This returns information about all the faces in the video, including a reading of six basic emotions - joy, sadness, surprise, fear, contempt, and disgust - on a scale of 1 to 100.
